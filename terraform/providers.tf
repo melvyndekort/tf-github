@@ -22,3 +22,7 @@ terraform {
 provider "aws" {
   region = "eu-west-1"
 }
+
+provider "github" {
+  token = local.secrets.github.terraform_token
+}
