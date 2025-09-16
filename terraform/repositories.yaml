@@ -1,44 +1,29 @@
 repositories:
-  scheduler:
+  assets:
     type: public
-    description: "Run scheduled jobs in Docker and trigger them manually via a web interface"
-    secrets:
-      - name: DOCKER_USERNAME
-        value_ref: docker_username
-      - name: DOCKER_PASSWORD
-        value_ref: docker_password
-      - name: CODECOV_TOKEN
-        value_ref: secrets.codecov.scheduler-token
-
-  "melvyndekort.github.io":
-    type: custom
-    description: "My personal blog"
-    visibility: public
-    has_issues: false
-    pages:
-      branch: gh-pages
-    default_branch: gh-pages
-
-  "example.melvyn.dev":
-    type: public
-    description: "Example static website"
-
-  ignition:
-    type: public
-    description: "This repository contains my ignition files for Fedora CoreOS"
-    allowed_actions_config: []
+    description: "This repository contains my static resources site"
     secrets:
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
       - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_ignition
+        value_ref: tf_cloudflare.api_token_assets
 
-  get-cookies:
+  bitbucket-sync:
+    type: private
+    description: "Sync all non-archived bitbucket repositories to local machine"
+
+  cheatsheets:
     type: public
-    description: "A serverless authentication solution which converts JWT tokens to AWS Cloudfront signed cookies"
+    description: "Documentation used in my custom Arch setup"
     secrets:
-      - name: CODECOV_TOKEN
-        value_ref: secrets.codecov.get-cookies-token
+      - name: CLOUDFLARE_ACCOUNT_ID
+        value_ref: cloudflare_account_id
+      - name: CLOUDFLARE_API_TOKEN
+        value_ref: tf_cloudflare.api_token_cheatsheets
+
+  cloudsetup:
+    type: private
+    description: "Terraform repository of my personal Cloud environments"
 
   dockersetup:
     type: private
@@ -49,56 +34,33 @@ repositories:
       - name: CLOUDFLARE_CLIENT_SECRET
         value_ref: tf_cloudflare.github_actions_client_secret
 
-  systemsetup:
-    type: private
-    description: "My custom system setup using Ansible"
-
-  bitbucket-sync:
-    type: private
-    description: "Sync all non-archived bitbucket repositories to local machine"
-
-  tf-github:
+  dotfiles:
     type: public
-    description: "Centrally manage github configuration"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_tf_github_role_arn
+    description: "This repository contains all the important dotfiles in my Linux home directory based on the chezmoi dotfile manager."
 
-  startpage:
-    type: private
-    description: "Public website"
-    secrets:
-      - name: CLOUDFLARE_ACCOUNT_ID
-        value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_startpage
-
-  lmgateway:
+  dracula-hugo-theme:
     type: public
-    description: "Tiny bastion EC2 server"
+    description: "My Dracula theme for Hugo static site generator"
+
+  "example.melvyn.dev":
+    type: public
+    description: "Example static website"
+
+  fluent-bit:
+    type: public
+    description: "Fluent Bit is a Fast and Lightweight Log Processor and Forwarder for Linux, OSX and BSD family operating systems"
     secrets:
       - name: DOCKER_USERNAME
         value_ref: docker_username
       - name: DOCKER_PASSWORD
         value_ref: docker_password
 
-  melvyn-dev:
+  get-cookies:
     type: public
-    description: "Public website"
+    description: "A serverless authentication solution which converts JWT tokens to AWS Cloudfront signed cookies"
     secrets:
-      - name: CLOUDFLARE_ACCOUNT_ID
-        value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_melvyn_dev
-
-  mdekort-nl:
-    type: public
-    description: "Public website"
-    secrets:
-      - name: CLOUDFLARE_ACCOUNT_ID
-        value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_mdekort_nl
+      - name: CODECOV_TOKEN
+        value_ref: secrets.codecov.get-cookies-token
 
   hevc-transcoder:
     type: public
@@ -110,6 +72,63 @@ repositories:
         value_ref: docker_password
       - name: CODECOV_TOKEN
         value_ref: secrets.codecov.hevc-transcoder-token
+
+  ignition:
+    type: public
+    description: "This repository contains my ignition files for Fedora CoreOS"
+    allowed_actions_config: []
+    secrets:
+      - name: CLOUDFLARE_ACCOUNT_ID
+        value_ref: cloudflare_account_id
+      - name: CLOUDFLARE_API_TOKEN
+        value_ref: tf_cloudflare.api_token_ignition
+
+  image-refresher:
+    type: public
+    description: "Docker container which updates specified docker images on the local system"
+    secrets:
+      - name: DOCKER_USERNAME
+        value_ref: docker_username
+      - name: DOCKER_PASSWORD
+        value_ref: docker_password
+      - name: CODECOV_TOKEN
+        value_ref: secrets.codecov.image-refresher-token
+
+  lmgateway:
+    type: public
+    description: "Tiny bastion EC2 server"
+    secrets:
+      - name: DOCKER_USERNAME
+        value_ref: docker_username
+      - name: DOCKER_PASSWORD
+        value_ref: docker_password
+
+  mdekort-nl:
+    type: public
+    description: "Public website"
+    secrets:
+      - name: CLOUDFLARE_ACCOUNT_ID
+        value_ref: cloudflare_account_id
+      - name: CLOUDFLARE_API_TOKEN
+        value_ref: tf_cloudflare.api_token_mdekort_nl
+
+  "melvyndekort.github.io":
+    type: custom
+    description: "My personal blog"
+    visibility: public
+    has_issues: false
+    pages:
+      branch: gh-pages
+    default_branch: gh-pages
+
+  melvyn-dev:
+    type: public
+    description: "Public website"
+    secrets:
+      - name: CLOUDFLARE_ACCOUNT_ID
+        value_ref: cloudflare_account_id
+      - name: CLOUDFLARE_API_TOKEN
+        value_ref: tf_cloudflare.api_token_melvyn_dev
 
   mta-sts:
     type: public
@@ -124,23 +143,36 @@ repositories:
     type: private
     description: "Password management should be simple and follow Unix philosophy"
 
-  cheatsheets:
+  scheduler:
     type: public
-    description: "Documentation used in my custom Arch setup"
-    secrets:
-      - name: CLOUDFLARE_ACCOUNT_ID
-        value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_cheatsheets
-
-  fluent-bit:
-    type: public
-    description: "Fluent Bit is a Fast and Lightweight Log Processor and Forwarder for Linux, OSX and BSD family operating systems"
+    description: "Run scheduled jobs in Docker and trigger them manually via a web interface"
     secrets:
       - name: DOCKER_USERNAME
         value_ref: docker_username
       - name: DOCKER_PASSWORD
         value_ref: docker_password
+      - name: CODECOV_TOKEN
+        value_ref: secrets.codecov.scheduler-token
+
+  startpage:
+    type: private
+    description: "Public website"
+    secrets:
+      - name: CLOUDFLARE_ACCOUNT_ID
+        value_ref: cloudflare_account_id
+      - name: CLOUDFLARE_API_TOKEN
+        value_ref: tf_cloudflare.api_token_startpage
+
+  systemsetup:
+    type: private
+    description: "My custom system setup using Ansible"
+
+  tf-aws:
+    type: public
+    description: "Manage centralized AWS resources using Terraform"
+    secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_tf_aws_role_arn
 
   tf-cloudflare:
     type: public
@@ -149,13 +181,12 @@ repositories:
       - name: AWS_ROLE_ARN
         value_ref: github_actions_tf_cloudflare_role_arn
 
-  dotfiles:
+  tf-github:
     type: public
-    description: "This repository contains all the important dotfiles in my Linux home directory based on the chezmoi dotfile manager."
-
-  dracula-hugo-theme:
-    type: public
-    description: "My Dracula theme for Hugo static site generator"
+    description: "Centrally manage github configuration"
+    secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_tf_github_role_arn
 
   tf-minecraft:
     type: public
@@ -163,34 +194,3 @@ repositories:
     secrets:
       - name: AWS_ROLE_ARN
         value_ref: github_actions_tf_minecraft_role_arn
-
-  assets:
-    type: public
-    description: "This repository contains my static resources site"
-    secrets:
-      - name: CLOUDFLARE_ACCOUNT_ID
-        value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_assets
-
-  cloudsetup:
-    type: private
-    description: "Terraform repository of my personal Cloud environments"
-
-  image-refresher:
-    type: public
-    description: "Docker container which updates specified docker images on the local system"
-    secrets:
-      - name: DOCKER_USERNAME
-        value_ref: docker_username
-      - name: DOCKER_PASSWORD
-        value_ref: docker_password
-      - name: CODECOV_TOKEN
-        value_ref: secrets.codecov.image-refresher-token
-
-  tf-aws:
-    type: public
-    description: "Manage centralized AWS resources using Terraform"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_tf_aws_role_arn
