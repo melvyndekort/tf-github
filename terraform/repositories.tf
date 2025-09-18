@@ -151,6 +151,7 @@ resource "github_actions_secret" "repo_secrets" {
     "secrets.codecov.image-refresher-token"      = local.secrets.codecov.image-refresher-token
     "secrets.codecov.get-cookies-token"          = local.secrets.codecov.get-cookies-token
     "github_actions_dockersetup_role_arn"        = "arn:aws:iam::075673041815:role/external/github-actions-dockersetup"
+    "github_actions_hevc_transcoder_role_arn"    = "arn:aws:iam::075673041815:role/external/github-actions-hevc-transcoder"
     "github_actions_tf_github_role_arn"          = "arn:aws:iam::075673041815:role/external/github-actions-tf-github"
     "github_actions_tf_cloudflare_role_arn"      = "arn:aws:iam::075673041815:role/external/github-actions-tf-cloudflare"
     "github_actions_tf_minecraft_role_arn"       = "arn:aws:iam::075673041815:role/external/github-actions-tf-minecraft"
