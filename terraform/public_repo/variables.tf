@@ -1,16 +1,21 @@
 variable "name" {
-  type = string
+  description = "Repository name"
+  type        = string
 }
 
 variable "description" {
-  type = string
+  description = "Repository description"
+  type        = string
 }
 
 variable "force_push_bypassers" {
-  type = list(string)
+  description = "List of user node IDs that can force push"
+  type        = list(string)
+  default     = []
 }
 
 variable "allowed_actions_config" {
-  type    = list(string)
-  default = []
+  description = "Allowed actions configuration"
+  type        = list(string)
+  default     = []
 }
