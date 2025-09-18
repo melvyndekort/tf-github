@@ -82,6 +82,8 @@ repositories:
     description: "This repository contains my ignition files for Fedora CoreOS"
     allowed_actions_config: []
     secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_ignition_role_arn
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
       - name: CLOUDFLARE_API_TOKEN
