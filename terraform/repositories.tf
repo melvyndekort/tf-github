@@ -84,6 +84,22 @@ resource "github_repository" "custom_repos" {
   }
 }
 
+# GitHub Actions permissions for custom repositories
+resource "github_actions_repository_permissions" "custom_repos" {
+  for_each = local.custom_repos
+
+  repository = github_repository.custom_repos[each.key].name
+
+  allowed_actions                  = "selected"
+  can_approve_pull_request_reviews = true
+
+  allowed_actions_config {
+    github_owned_allowed = true
+    verified_allowed     = true
+    patterns_allowed     = []
+  }
+}
+
 # Handle default branch for custom repos with pages
 data "github_branch" "custom_repo_branches" {
   for_each = {
