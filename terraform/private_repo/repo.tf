@@ -43,27 +43,6 @@ data "github_branch" "main" {
   branch     = "main"
 }
 
-resource "github_branch_protection" "main" {
-  repository_id = github_repository.repo.name
-
-  pattern = data.github_branch.main.branch
-
-  require_conversation_resolution = true
-  require_signed_commits          = true
-  allows_deletions                = false
-
-  required_status_checks {
-    strict = false
-  }
-
-  required_pull_request_reviews {
-    dismiss_stale_reviews      = true
-    require_last_push_approval = true
-  }
-
-  force_push_bypassers = var.force_push_bypassers
-}
-
 resource "github_branch_default" "main" {
   repository = github_repository.repo.name
   branch     = data.github_branch.main.branch
