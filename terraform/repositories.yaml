@@ -64,19 +64,6 @@ repositories:
       - name: CODECOV_TOKEN
         value_ref: secrets.codecov.get-cookies-token
 
-  hevc-transcoder:
-    type: public
-    description: "HEVC encode all the MP4 files uploaded to an S3 bucket"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_hevc_transcoder_role_arn
-      - name: DOCKER_USERNAME
-        value_ref: docker_username
-      - name: DOCKER_PASSWORD
-        value_ref: docker_password
-      - name: CODECOV_TOKEN
-        value_ref: secrets.codecov.hevc-transcoder-token
-
   ignition:
     type: public
     description: "This repository contains my ignition files for Fedora CoreOS"

@@ -147,12 +147,10 @@ resource "github_actions_secret" "repo_secrets" {
     "tf_cloudflare.github_actions_client_id"     = data.terraform_remote_state.tf_cloudflare.outputs.github_actions_client_id
     "tf_cloudflare.github_actions_client_secret" = data.terraform_remote_state.tf_cloudflare.outputs.github_actions_client_secret
     "secrets.codecov.scheduler-token"            = local.secrets.codecov.scheduler-token
-    "secrets.codecov.hevc-transcoder-token"      = local.secrets.codecov.hevc-transcoder-token
     "secrets.codecov.image-refresher-token"      = local.secrets.codecov.image-refresher-token
     "secrets.codecov.get-cookies-token"          = local.secrets.codecov.get-cookies-token
     "github_actions_dockersetup_role_arn"        = "arn:aws:iam::075673041815:role/external/github-actions-dockersetup"
     "github_actions_ignition_role_arn"           = "arn:aws:iam::075673041815:role/external/github-actions-ignition"
-    "github_actions_hevc_transcoder_role_arn"    = "arn:aws:iam::075673041815:role/external/github-actions-hevc-transcoder"
     "github_actions_tf_github_role_arn"          = "arn:aws:iam::075673041815:role/external/github-actions-tf-github"
     "github_actions_tf_cloudflare_role_arn"      = "arn:aws:iam::075673041815:role/external/github-actions-tf-cloudflare"
     "github_actions_tf_minecraft_role_arn"       = "arn:aws:iam::075673041815:role/external/github-actions-tf-minecraft"
