@@ -3,6 +3,8 @@ repositories:
     type: public
     description: "This repository contains my static resources site"
     secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_assets_role_arn
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
       - name: CLOUDFLARE_API_TOKEN
@@ -16,6 +18,8 @@ repositories:
     type: public
     description: "Documentation used in my custom Arch setup"
     secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_cheatsheets_role_arn
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
       - name: CLOUDFLARE_API_TOKEN
@@ -87,6 +91,8 @@ repositories:
     type: public
     description: "Public website"
     secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_mdekort_nl_role_arn
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
       - name: CLOUDFLARE_API_TOKEN
@@ -105,6 +111,8 @@ repositories:
     type: public
     description: "Public website"
     secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_melvyn_dev_role_arn
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
       - name: CLOUDFLARE_API_TOKEN
@@ -114,6 +122,8 @@ repositories:
     type: public
     description: "This repository contains my MTA-STS configuration"
     secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_mta_sts_role_arn
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
       - name: CLOUDFLARE_API_TOKEN

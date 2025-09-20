@@ -155,5 +155,10 @@ resource "github_actions_secret" "repo_secrets" {
     "github_actions_tf_cloudflare_role_arn"      = "arn:aws:iam::075673041815:role/external/github-actions-tf-cloudflare"
     "github_actions_tf_minecraft_role_arn"       = "arn:aws:iam::075673041815:role/external/github-actions-tf-minecraft"
     "github_actions_tf_aws_role_arn"             = "arn:aws:iam::075673041815:role/external/github-actions-tf-aws"
+    "github_actions_mdekort_nl_role_arn"         = "arn:aws:iam::075673041815:role/external/github-actions-mdekort-nl"
+    "github_actions_melvyn_dev_role_arn"         = "arn:aws:iam::075673041815:role/external/github-actions-melvyn-dev"
+    "github_actions_assets_role_arn"             = "arn:aws:iam::075673041815:role/external/github-actions-assets"
+    "github_actions_cheatsheets_role_arn"        = "arn:aws:iam::075673041815:role/external/github-actions-cheatsheets"
+    "github_actions_mta_sts_role_arn"            = "arn:aws:iam::075673041815:role/external/github-actions-mta-sts"
   }, each.value.value_ref, "")
 }
