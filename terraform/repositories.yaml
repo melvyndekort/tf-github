@@ -140,10 +140,6 @@ repositories:
     type: public
     description: "Run scheduled jobs in Docker and trigger them manually via a web interface"
     secrets:
-      - name: DOCKER_USERNAME
-        value_ref: docker_username
-      - name: DOCKER_PASSWORD
-        value_ref: docker_password
       - name: CODECOV_TOKEN
         value_ref: secrets.codecov.scheduler-token
 
