@@ -149,16 +149,16 @@ resource "github_actions_secret" "repo_secrets" {
     "secrets.codecov.scheduler-token"            = local.secrets.codecov.scheduler-token
     "secrets.codecov.image-refresher-token"      = local.secrets.codecov.image-refresher-token
     "secrets.codecov.get-cookies-token"          = local.secrets.codecov.get-cookies-token
-    "github_actions_dockersetup_role_arn"        = "arn:aws:iam::075673041815:role/external/github-actions-dockersetup"
-    "github_actions_ignition_role_arn"           = "arn:aws:iam::075673041815:role/external/github-actions-ignition"
-    "github_actions_tf_github_role_arn"          = "arn:aws:iam::075673041815:role/external/github-actions-tf-github"
-    "github_actions_tf_cloudflare_role_arn"      = "arn:aws:iam::075673041815:role/external/github-actions-tf-cloudflare"
-    "github_actions_tf_minecraft_role_arn"       = "arn:aws:iam::075673041815:role/external/github-actions-tf-minecraft"
-    "github_actions_tf_aws_role_arn"             = "arn:aws:iam::075673041815:role/external/github-actions-tf-aws"
-    "github_actions_mdekort_nl_role_arn"         = "arn:aws:iam::075673041815:role/external/github-actions-mdekort-nl"
-    "github_actions_melvyn_dev_role_arn"         = "arn:aws:iam::075673041815:role/external/github-actions-melvyn-dev"
-    "github_actions_assets_role_arn"             = "arn:aws:iam::075673041815:role/external/github-actions-assets"
-    "github_actions_cheatsheets_role_arn"        = "arn:aws:iam::075673041815:role/external/github-actions-cheatsheets"
-    "github_actions_mta_sts_role_arn"            = "arn:aws:iam::075673041815:role/external/github-actions-mta-sts"
+    "github_actions_dockersetup_role_arn"        = aws_iam_role.github_actions["dockersetup"].arn
+    "github_actions_ignition_role_arn"           = aws_iam_role.github_actions["ignition"].arn
+    "github_actions_tf_github_role_arn"          = aws_iam_role.github_actions["tf-github"].arn
+    "github_actions_tf_cloudflare_role_arn"      = aws_iam_role.github_actions["tf-cloudflare"].arn
+    "github_actions_tf_minecraft_role_arn"       = aws_iam_role.github_actions["tf-minecraft"].arn
+    "github_actions_tf_aws_role_arn"             = aws_iam_role.github_actions["tf-aws"].arn
+    "github_actions_mdekort_nl_role_arn"         = aws_iam_role.github_actions["mdekort-nl"].arn
+    "github_actions_melvyn_dev_role_arn"         = aws_iam_role.github_actions["melvyn-dev"].arn
+    "github_actions_assets_role_arn"             = aws_iam_role.github_actions["assets"].arn
+    "github_actions_cheatsheets_role_arn"        = aws_iam_role.github_actions["cheatsheets"].arn
+    "github_actions_mta_sts_role_arn"            = aws_iam_role.github_actions["mta-sts"].arn
   }, each.value.value_ref, "")
 }
