@@ -19,10 +19,6 @@ locals {
       repo_name = "melvyndekort/cheatsheets"
       role_name = "github-actions-cheatsheets"
     }
-    "cv-melvyn-dev" = {
-      repo_name = "melvyndekort/cv-melvyn-dev"
-      role_name = "github-actions-cv-melvyn-dev"
-    }
     "dockersetup" = {
       repo_name = "melvyndekort/dockersetup"
       role_name = "github-actions-dockersetup"
