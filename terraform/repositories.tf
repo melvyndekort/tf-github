@@ -151,7 +151,7 @@ resource "github_actions_secret" "repo_secrets" {
     "secrets.codecov.get-cookies-token"          = local.secrets.codecov.get-cookies-token
     "github_actions_dockersetup_role_arn"        = aws_iam_role.github_actions["dockersetup"].arn
     "github_actions_ignition_role_arn"           = aws_iam_role.github_actions["ignition"].arn
-    "github_actions_tf_github_role_arn"          = aws_iam_role.github_actions["tf-github"].arn
+    "github_actions_tf_github_role_arn"          = data.aws_iam_role.tf_github_role.arn
     "github_actions_tf_cloudflare_role_arn"      = aws_iam_role.github_actions["tf-cloudflare"].arn
     "github_actions_tf_minecraft_role_arn"       = aws_iam_role.github_actions["tf-minecraft"].arn
     "github_actions_tf_aws_role_arn"             = aws_iam_role.github_actions["tf-aws"].arn

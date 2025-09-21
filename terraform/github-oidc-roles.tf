@@ -1,7 +1,12 @@
-# Centralized GitHub OIDC roles for all repositories
+# GitHub OIDC roles for all repositories except tf-github (managed in bootstrap)
 
 data "aws_iam_openid_connect_provider" "github" {
   url = "https://token.actions.githubusercontent.com"
+}
+
+# Data source for tf-github role managed in bootstrap
+data "aws_iam_role" "tf_github_role" {
+  name = "github-actions-tf-github"
 }
 
 locals {
@@ -42,25 +47,9 @@ locals {
       repo_name = "melvyndekort/tf-cloudflare"
       role_name = "github-actions-tf-cloudflare"
     }
-    "tf-github" = {
-      repo_name = "melvyndekort/tf-github"
-      role_name = "github-actions-tf-github"
-    }
     "tf-minecraft" = {
       repo_name = "melvyndekort/tf-minecraft"
       role_name = "github-actions-tf-minecraft"
-    }
-    "mdekort-nl" = {
-      repo_name = "melvyndekort/mdekort-nl"
-      role_name = "github-actions-mdekort-nl"
-    }
-    "melvyn-dev" = {
-      repo_name = "melvyndekort/melvyn-dev"
-      role_name = "github-actions-melvyn-dev"
-    }
-    "mta-sts" = {
-      repo_name = "melvyndekort/mta-sts"
-      role_name = "github-actions-mta-sts"
     }
   }
 }
@@ -106,7 +95,12 @@ resource "aws_iam_role_policy_attachment" "github_actions_admin" {
 }
 
 output "github_actions_role_arns" {
-  value = {
-    for k, v in aws_iam_role.github_actions : k => v.arn
-  }
+  value = merge(
+    {
+      for k, v in aws_iam_role.github_actions : k => v.arn
+    },
+    {
+      "tf-github" = data.aws_iam_role.tf_github_role.arn
+    }
+  )
 }
