@@ -144,7 +144,6 @@ resource "github_actions_secret" "repo_secrets" {
     "tf_cloudflare.api_token_mta_sts"            = data.terraform_remote_state.tf_cloudflare.outputs.api_token_mta_sts
     "tf_cloudflare.api_token_cheatsheets"        = data.terraform_remote_state.tf_cloudflare.outputs.api_token_cheatsheets
     "tf_cloudflare.api_token_assets"             = data.terraform_remote_state.tf_cloudflare.outputs.api_token_assets
-    "tf_cloudflare.api_token_cv_melvyn_dev"      = data.terraform_remote_state.tf_cloudflare.outputs.api_token_cv_melvyn_dev
     "tf_cloudflare.github_actions_client_id"     = data.terraform_remote_state.tf_cloudflare.outputs.github_actions_client_id
     "tf_cloudflare.github_actions_client_secret" = data.terraform_remote_state.tf_cloudflare.outputs.github_actions_client_secret
     "secrets.codecov.scheduler-token"            = local.secrets.codecov.scheduler-token

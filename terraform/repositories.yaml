@@ -189,5 +189,3 @@ repositories:
         value_ref: github_actions_cv_melvyn_dev_role_arn
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_cv_melvyn_dev
