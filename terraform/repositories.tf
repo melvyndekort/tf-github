@@ -158,7 +158,6 @@ resource "github_actions_secret" "repo_secrets" {
     "github_actions_tf_aws_role_arn"             = aws_iam_role.github_actions["tf-aws"].arn
     "github_actions_mdekort_nl_role_arn"         = aws_iam_role.github_actions["mdekort-nl"].arn
     "github_actions_melvyn_dev_role_arn"         = aws_iam_role.github_actions["melvyn-dev"].arn
-    "github_actions_cv_melvyn_dev_role_arn"      = aws_iam_role.github_actions["cv-melvyn-dev"].arn
     "github_actions_assets_role_arn"             = aws_iam_role.github_actions["assets"].arn
     "github_actions_cheatsheets_role_arn"        = aws_iam_role.github_actions["cheatsheets"].arn
     "github_actions_mta_sts_role_arn"            = aws_iam_role.github_actions["mta-sts"].arn
