@@ -10,10 +10,6 @@ repositories:
       - name: CLOUDFLARE_API_TOKEN
         value_ref: tf_cloudflare.api_token_assets
 
-  bitbucket-sync:
-    type: private
-    description: "Sync all non-archived bitbucket repositories to local machine"
-
   cheatsheets:
     type: public
     description: "Documentation used in my custom Arch setup"
