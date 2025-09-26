@@ -51,6 +51,10 @@ locals {
       repo_name = "melvyndekort/tf-minecraft"
       role_name = "github-actions-tf-minecraft"
     }
+    "get-cookies" = {
+      repo_name = "melvyndekort/get-cookies"
+      role_name = "github-actions-get-cookies"
+    }
   }
 }
 
