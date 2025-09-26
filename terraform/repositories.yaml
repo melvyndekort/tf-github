@@ -47,11 +47,16 @@ repositories:
   "example.melvyn.dev":
     type: public
     description: "Example static website"
+    secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_example_melvyn_dev_role_arn
 
   get-cookies:
     type: public
     description: "A serverless authentication solution which converts JWT tokens to AWS Cloudfront signed cookies"
     secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_get_cookies_role_arn
       - name: CODECOV_TOKEN
         value_ref: secrets.codecov.get-cookies-token
 
@@ -78,6 +83,8 @@ repositories:
     type: public
     description: "Tiny bastion EC2 server"
     secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_lmgateway_role_arn
       - name: DOCKER_USERNAME
         value_ref: docker_username
       - name: DOCKER_PASSWORD
@@ -140,6 +147,8 @@ repositories:
     type: private
     description: "Public website"
     secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_startpage_role_arn
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
       - name: CLOUDFLARE_API_TOKEN

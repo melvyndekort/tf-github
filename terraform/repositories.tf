@@ -160,5 +160,9 @@ resource "github_actions_secret" "repo_secrets" {
     "github_actions_assets_role_arn"             = aws_iam_role.github_actions["assets"].arn
     "github_actions_cheatsheets_role_arn"        = aws_iam_role.github_actions["cheatsheets"].arn
     "github_actions_mta_sts_role_arn"            = aws_iam_role.github_actions["mta-sts"].arn
+    "github_actions_get_cookies_role_arn"        = aws_iam_role.github_actions["get-cookies"].arn
+    "github_actions_example_melvyn_dev_role_arn" = aws_iam_role.github_actions["example.melvyn.dev"].arn
+    "github_actions_lmgateway_role_arn"          = aws_iam_role.github_actions["lmgateway"].arn
+    "github_actions_startpage_role_arn"          = aws_iam_role.github_actions["startpage"].arn
   }, each.value.value_ref, "")
 }
