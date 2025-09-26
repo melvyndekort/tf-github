@@ -55,6 +55,18 @@ locals {
       repo_name = "melvyndekort/get-cookies"
       role_name = "github-actions-get-cookies"
     }
+    "example.melvyn.dev" = {
+      repo_name = "melvyndekort/example.melvyn.dev"
+      role_name = "github-actions-example-melvyn-dev"
+    }
+    "lmgateway" = {
+      repo_name = "melvyndekort/lmgateway"
+      role_name = "github-actions-lmgateway"
+    }
+    "startpage" = {
+      repo_name = "melvyndekort/startpage"
+      role_name = "github-actions-startpage"
+    }
   }
 }
 
