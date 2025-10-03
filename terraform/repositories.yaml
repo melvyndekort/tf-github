@@ -25,12 +25,12 @@ repositories:
     type: private
     description: "Terraform repository of my personal Cloud environments"
 
-  dockersetup:
+  lmserver:
     type: private
-    description: "Docker stacks to run all lmserver software"
+    description: "Docker compose stack to run all lmserver software"
     secrets:
       - name: AWS_ROLE_ARN
-        value_ref: github_actions_dockersetup_role_arn
+        value_ref: github_actions_lmserver_role_arn
       - name: CLOUDFLARE_CLIENT_ID
         value_ref: tf_cloudflare.github_actions_client_id
       - name: CLOUDFLARE_CLIENT_SECRET
