@@ -139,6 +139,9 @@ repositories:
   router-events:
     type: private
     description: "Process events sent by a router"
+    secrets:
+      - name: CODECOV_TOKEN
+        value_ref: secrets.codecov.router-events-token
 
   scheduler:
     type: public
