@@ -149,6 +149,7 @@ resource "github_actions_secret" "repo_secrets" {
     "secrets.codecov.scheduler-token"            = local.secrets.codecov.scheduler-token
     "secrets.codecov.image-refresher-token"      = local.secrets.codecov.image-refresher-token
     "secrets.codecov.get-cookies-token"          = local.secrets.codecov.get-cookies-token
+    "secrets.codecov.router-events-token"        = local.secrets.codecov.router-events-token
     "github_actions_lmserver_role_arn"           = aws_iam_role.github_actions["lmserver"].arn
     "github_actions_ignition_role_arn"           = aws_iam_role.github_actions["ignition"].arn
     "github_actions_tf_github_role_arn"          = data.aws_iam_role.tf_github_role.arn
