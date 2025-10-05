@@ -136,6 +136,10 @@ repositories:
     type: private
     description: "Password management should be simple and follow Unix philosophy"
 
+  router-events:
+    type: private
+    description: "Process events sent by a router"
+
   scheduler:
     type: public
     description: "Run scheduled jobs in Docker and trigger them manually via a web interface"
