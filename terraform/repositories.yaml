@@ -137,7 +137,7 @@ repositories:
     description: "Password management should be simple and follow Unix philosophy"
 
   router-events:
-    type: private
+    type: public
     description: "Process events sent by a router"
     secrets:
       - name: CODECOV_TOKEN
