@@ -79,17 +79,6 @@ repositories:
       - name: CODECOV_TOKEN
         value_ref: secrets.codecov.image-refresher-token
 
-  lmgateway:
-    type: public
-    description: "Tiny bastion EC2 server"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_lmgateway_role_arn
-      - name: DOCKER_USERNAME
-        value_ref: docker_username
-      - name: DOCKER_PASSWORD
-        value_ref: docker_password
-
   mdekort-nl:
     type: public
     description: "Public website"
