@@ -40,10 +40,6 @@ repositories:
     type: public
     description: "This repository contains all the important dotfiles in my Linux home directory based on the chezmoi dotfile manager."
 
-  dircproxy:
-    type: public
-    description: "A containerized IRC proxy server using dircproxy with supervisor for process management"
-
   dracula-hugo-theme:
     type: public
     description: "My Dracula theme for Hugo static site generator"
