@@ -57,8 +57,6 @@ repositories:
     secrets:
       - name: AWS_ROLE_ARN
         value_ref: github_actions_get_cookies_role_arn
-      - name: CODECOV_TOKEN
-        value_ref: secrets.codecov.get-cookies-token
 
   ignition:
     type: public
@@ -75,9 +73,6 @@ repositories:
   image-refresher:
     type: public
     description: "Docker container which updates specified docker images on the local system"
-    secrets:
-      - name: CODECOV_TOKEN
-        value_ref: secrets.codecov.image-refresher-token
 
   mdekort-nl:
     type: public
@@ -128,16 +123,10 @@ repositories:
   router-events:
     type: public
     description: "Process events sent by a router"
-    secrets:
-      - name: CODECOV_TOKEN
-        value_ref: secrets.codecov.router-events-token
 
   scheduler:
     type: public
     description: "Run scheduled jobs in Docker and trigger them manually via a web interface"
-    secrets:
-      - name: CODECOV_TOKEN
-        value_ref: secrets.codecov.scheduler-token
 
   startpage:
     type: private
