@@ -134,12 +134,12 @@ resource "github_actions_secret" "repo_secrets" {
   )
   secret_name = each.value.secret_name
   plaintext_value = lookup({
-    "docker_username"                            = local.docker_username
-    "docker_password"                            = local.docker_password
-    "cloudflare_account_id"                      = local.cloudflare_account_id
-    "tf_cloudflare.api_token_startpage"          = data.terraform_remote_state.tf_cloudflare.outputs.api_token_startpage
-    "tf_cloudflare.api_token_ignition"           = data.terraform_remote_state.tf_cloudflare.outputs.api_token_ignition
-    "tf_cloudflare.api_token_melvyn_dev"         = data.terraform_remote_state.tf_cloudflare.outputs.api_token_melvyn_dev
+    "docker_username"                    = local.docker_username
+    "docker_password"                    = local.docker_password
+    "cloudflare_account_id"              = local.cloudflare_account_id
+    "tf_cloudflare.api_token_startpage"  = data.terraform_remote_state.tf_cloudflare.outputs.api_token_startpage
+    "tf_cloudflare.api_token_ignition"   = data.terraform_remote_state.tf_cloudflare.outputs.api_token_ignition
+    "tf_cloudflare.api_token_melvyn_dev" = data.terraform_remote_state.tf_cloudflare.outputs.api_token_melvyn_dev
 
     "tf_cloudflare.api_token_mta_sts"            = data.terraform_remote_state.tf_cloudflare.outputs.api_token_mta_sts
     "tf_cloudflare.api_token_cheatsheets"        = data.terraform_remote_state.tf_cloudflare.outputs.api_token_cheatsheets
