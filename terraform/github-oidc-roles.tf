@@ -15,6 +15,10 @@ locals {
       repo_name = "melvyndekort/assets"
       role_name = "github-actions-assets"
     }
+    "aws-ntfy-alerts" = {
+      repo_name = "melvyndekort/aws-ntfy-alerts"
+      role_name = "github-actions-aws-ntfy-alerts"
+    }
     "cheatsheets" = {
       repo_name = "melvyndekort/cheatsheets"
       role_name = "github-actions-cheatsheets"
