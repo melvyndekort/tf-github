@@ -140,7 +140,7 @@ resource "github_actions_secret" "repo_secrets" {
     "tf_cloudflare.api_token_startpage"          = data.terraform_remote_state.tf_cloudflare.outputs.api_token_startpage
     "tf_cloudflare.api_token_ignition"           = data.terraform_remote_state.tf_cloudflare.outputs.api_token_ignition
     "tf_cloudflare.api_token_melvyn_dev"         = data.terraform_remote_state.tf_cloudflare.outputs.api_token_melvyn_dev
-    "tf_cloudflare.api_token_mdekort_nl"         = data.terraform_remote_state.tf_cloudflare.outputs.api_token_mdekort_nl
+
     "tf_cloudflare.api_token_mta_sts"            = data.terraform_remote_state.tf_cloudflare.outputs.api_token_mta_sts
     "tf_cloudflare.api_token_cheatsheets"        = data.terraform_remote_state.tf_cloudflare.outputs.api_token_cheatsheets
     "tf_cloudflare.api_token_assets"             = data.terraform_remote_state.tf_cloudflare.outputs.api_token_assets
@@ -153,7 +153,7 @@ resource "github_actions_secret" "repo_secrets" {
     "github_actions_tf_cloudflare_role_arn"      = aws_iam_role.github_actions["tf-cloudflare"].arn
     "github_actions_tf_minecraft_role_arn"       = aws_iam_role.github_actions["tf-minecraft"].arn
     "github_actions_tf_aws_role_arn"             = aws_iam_role.github_actions["tf-aws"].arn
-    "github_actions_mdekort_nl_role_arn"         = aws_iam_role.github_actions["mdekort-nl"].arn
+
     "github_actions_melvyn_dev_role_arn"         = aws_iam_role.github_actions["melvyn-dev"].arn
     "github_actions_assets_role_arn"             = aws_iam_role.github_actions["assets"].arn
     "github_actions_cheatsheets_role_arn"        = aws_iam_role.github_actions["cheatsheets"].arn

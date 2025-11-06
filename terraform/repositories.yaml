@@ -81,16 +81,7 @@ repositories:
     type: public
     description: "Docker container which updates specified docker images on the local system"
 
-  mdekort-nl:
-    type: public
-    description: "Public website"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_mdekort_nl_role_arn
-      - name: CLOUDFLARE_ACCOUNT_ID
-        value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_mdekort_nl
+
 
   "melvyndekort.github.io":
     type: custom

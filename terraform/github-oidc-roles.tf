@@ -31,10 +31,7 @@ locals {
       repo_name = "melvyndekort/ignition"
       role_name = "github-actions-ignition"
     }
-    "mdekort-nl" = {
-      repo_name = "melvyndekort/mdekort-nl"
-      role_name = "github-actions-mdekort-nl"
-    }
+
     "melvyn-dev" = {
       repo_name = "melvyndekort/melvyn-dev"
       role_name = "github-actions-melvyn-dev"
