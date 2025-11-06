@@ -10,6 +10,13 @@ repositories:
       - name: CLOUDFLARE_API_TOKEN
         value_ref: tf_cloudflare.api_token_assets
 
+  aws-ntfy-alerts:
+    type: public
+    description: "AWS alerting system that forwards SNS notifications to ntfy"
+    secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_aws_ntfy_alerts_role_arn
+
   cheatsheets:
     type: public
     description: "Documentation used in my custom Arch setup"
