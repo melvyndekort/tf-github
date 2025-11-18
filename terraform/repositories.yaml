@@ -47,6 +47,13 @@ repositories:
     type: public
     description: "This repository contains all the important dotfiles in my Linux home directory based on the chezmoi dotfile manager."
 
+  email-infra:
+    type: public
+    description: "Email infrastructure with DMARC collection and DNS management"
+    secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_email_infra_role_arn
+
   dracula-hugo-theme:
     type: public
     description: "My Dracula theme for Hugo static site generator"

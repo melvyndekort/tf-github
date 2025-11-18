@@ -161,5 +161,6 @@ resource "github_actions_secret" "repo_secrets" {
     "github_actions_get_cookies_role_arn"        = aws_iam_role.github_actions["get-cookies"].arn
     "github_actions_example_melvyn_dev_role_arn" = aws_iam_role.github_actions["example.melvyn.dev"].arn
     "github_actions_startpage_role_arn"          = aws_iam_role.github_actions["startpage"].arn
+    "github_actions_email_infra_role_arn"        = aws_iam_role.github_actions["email-infra"].arn
   }, each.value.value_ref, "")
 }

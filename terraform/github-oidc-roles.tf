@@ -64,6 +64,10 @@ locals {
       repo_name = "melvyndekort/startpage"
       role_name = "github-actions-startpage"
     }
+    "email-infra" = {
+      repo_name = "melvyndekort/email-infra"
+      role_name = "github-actions-email-infra"
+    }
   }
 }
 
