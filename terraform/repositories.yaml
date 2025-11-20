@@ -28,10 +28,6 @@ repositories:
       - name: CLOUDFLARE_API_TOKEN
         value_ref: tf_cloudflare.api_token_cheatsheets
 
-  cloudsetup:
-    type: private
-    description: "Terraform repository of my personal Cloud environments"
-
   lmserver:
     type: private
     description: "Docker compose stack to run all lmserver software"
