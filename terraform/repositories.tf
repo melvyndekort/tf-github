@@ -152,7 +152,7 @@ resource "github_actions_secret" "repo_secrets" {
     "github_actions_tf_github_role_arn"          = data.aws_iam_role.tf_github_role.arn
     "github_actions_tf_cloudflare_role_arn"      = aws_iam_role.github_actions["tf-cloudflare"].arn
     "github_actions_tf_grafana_role_arn"         = aws_iam_role.github_actions["tf-grafana"].arn
-    "github_actions_tf_minecraft_role_arn"       = aws_iam_role.github_actions["tf-minecraft"].arn
+    "github_actions_minecraft_server_role_arn"   = aws_iam_role.github_actions["minecraft-server"].arn
     "github_actions_tf_aws_role_arn"             = aws_iam_role.github_actions["tf-aws"].arn
     "github_actions_tf_backup_role_arn"          = aws_iam_role.github_actions["tf-backup"].arn
     "github_actions_tf_cloudtrail_role_arn"      = aws_iam_role.github_actions["tf-cloudtrail"].arn

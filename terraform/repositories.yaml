@@ -193,9 +193,9 @@ repositories:
       - name: AWS_ROLE_ARN
         value_ref: github_actions_tf_cognito_role_arn
 
-  tf-minecraft:
+  minecraft-server:
     type: public
     description: "A Minecraft server on AWS ECS"
     secrets:
       - name: AWS_ROLE_ARN
-        value_ref: github_actions_tf_minecraft_role_arn
+        value_ref: github_actions_minecraft_server_role_arn
