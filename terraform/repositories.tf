@@ -155,6 +155,7 @@ resource "github_actions_secret" "repo_secrets" {
     "github_actions_tf_minecraft_role_arn"       = aws_iam_role.github_actions["tf-minecraft"].arn
     "github_actions_tf_aws_role_arn"             = aws_iam_role.github_actions["tf-aws"].arn
     "github_actions_tf_backup_role_arn"          = aws_iam_role.github_actions["tf-backup"].arn
+    "github_actions_tf_cloudtrail_role_arn"      = aws_iam_role.github_actions["tf-cloudtrail"].arn
 
     "github_actions_melvyn_dev_role_arn"         = aws_iam_role.github_actions["melvyn-dev"].arn
     "github_actions_assets_role_arn"             = aws_iam_role.github_actions["assets"].arn

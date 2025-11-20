@@ -183,6 +183,13 @@ repositories:
       - name: AWS_ROLE_ARN
         value_ref: github_actions_tf_backup_role_arn
 
+  tf-cloudtrail:
+    type: public
+    description: "Terraform configuration for AWS CloudTrail setup"
+    secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_tf_cloudtrail_role_arn
+
   tf-minecraft:
     type: public
     description: "A Minecraft server on AWS ECS"
