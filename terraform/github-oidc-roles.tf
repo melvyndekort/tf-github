@@ -60,6 +60,10 @@ locals {
       repo_name = "melvyndekort/tf-cloudtrail"
       role_name = "github-actions-tf-cloudtrail"
     }
+    "tf-cognito" = {
+      repo_name = "melvyndekort/tf-cognito"
+      role_name = "github-actions-tf-cognito"
+    }
     "tf-minecraft" = {
       repo_name = "melvyndekort/tf-minecraft"
       role_name = "github-actions-tf-minecraft"
