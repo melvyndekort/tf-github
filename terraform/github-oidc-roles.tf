@@ -48,6 +48,10 @@ locals {
       repo_name = "melvyndekort/tf-cloudflare"
       role_name = "github-actions-tf-cloudflare"
     }
+    "tf-grafana" = {
+      repo_name = "melvyndekort/tf-grafana"
+      role_name = "github-actions-tf-grafana"
+    }
     "tf-minecraft" = {
       repo_name = "melvyndekort/tf-minecraft"
       role_name = "github-actions-tf-minecraft"

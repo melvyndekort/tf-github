@@ -162,6 +162,13 @@ repositories:
       - name: AWS_ROLE_ARN
         value_ref: github_actions_tf_cloudflare_role_arn
 
+  tf-grafana:
+    type: public
+    description: "Terraform configuration for managing Grafana Cloud infrastructure"
+    secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_tf_grafana_role_arn
+
   tf-github:
     type: public
     description: "Centrally manage github configuration"
