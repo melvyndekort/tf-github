@@ -52,6 +52,10 @@ locals {
       repo_name = "melvyndekort/tf-grafana"
       role_name = "github-actions-tf-grafana"
     }
+    "tf-backup" = {
+      repo_name = "melvyndekort/tf-backup"
+      role_name = "github-actions-tf-backup"
+    }
     "tf-minecraft" = {
       repo_name = "melvyndekort/tf-minecraft"
       role_name = "github-actions-tf-minecraft"

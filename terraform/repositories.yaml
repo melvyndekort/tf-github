@@ -176,6 +176,13 @@ repositories:
       - name: AWS_ROLE_ARN
         value_ref: github_actions_tf_github_role_arn
 
+  tf-backup:
+    type: public
+    description: "Terraform configuration for managing backup infrastructure"
+    secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_tf_backup_role_arn
+
   tf-minecraft:
     type: public
     description: "A Minecraft server on AWS ECS"
