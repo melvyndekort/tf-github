@@ -14,13 +14,14 @@ resource "github_repository" "repo" {
   delete_branch_on_merge = true
   vulnerability_alerts   = true
   archive_on_destroy     = true
+
+  allow_update_branch = true
 }
 
 resource "github_actions_repository_permissions" "repo" {
   repository = github_repository.repo.name
 
-  allowed_actions                  = "selected"
-  can_approve_pull_request_reviews = true
+  allowed_actions = "selected"
 
   allowed_actions_config {
     github_owned_allowed = true
