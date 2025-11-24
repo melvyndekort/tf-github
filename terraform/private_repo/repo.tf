@@ -18,7 +18,8 @@ resource "github_repository" "repo" {
 resource "github_actions_repository_permissions" "repo" {
   repository = github_repository.repo.name
 
-  allowed_actions = "selected"
+  allowed_actions                  = "selected"
+  can_approve_pull_request_reviews = true
 
   allowed_actions_config {
     github_owned_allowed = true

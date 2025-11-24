@@ -90,7 +90,8 @@ resource "github_actions_repository_permissions" "custom_repos" {
 
   repository = github_repository.custom_repos[each.key].name
 
-  allowed_actions = "selected"
+  allowed_actions                  = "selected"
+  can_approve_pull_request_reviews = true
 
   allowed_actions_config {
     github_owned_allowed = true
