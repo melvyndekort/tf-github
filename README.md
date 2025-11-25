@@ -106,6 +106,30 @@ make clean_secrets
 
 Secrets are stored encrypted in `terraform/secrets.yaml.encrypted` and decrypted using AWS KMS. The decrypted file is automatically excluded from version control.
 
+### GitHub Actions PR Approval Workaround
+
+**Issue**: The Terraform GitHub provider doesn't support enabling "Allow GitHub Actions to create and approve pull requests" setting, which is required for dependabot auto-approval workflows.
+
+**Solution**: Use the GitHub API directly to enable this setting for all repositories:
+
+```bash
+# Enable for all repositories with workflows
+for repo in $(gh repo list melvyndekort --limit 1000 --json name -q '.[].name'); do
+  if gh api repos/melvyndekort/$repo/contents/.github/workflows &>/dev/null; then
+    echo "Enabling PR approval for $repo"
+    gh api --method PUT repos/melvyndekort/$repo/actions/permissions/workflow \
+      --field default_workflow_permissions=read \
+      --field can_approve_pull_request_reviews=true
+  fi
+done
+```
+
+**API Endpoint**: `PUT /repos/{owner}/{repo}/actions/permissions/workflow`
+- `can_approve_pull_request_reviews: true` - Allows GitHub Actions to approve PRs
+- `default_workflow_permissions: read` - Sets default workflow permissions
+
+This setting is required for dependabot workflows to automatically approve and merge GitHub Actions updates.
+
 ## Remote State
 
 Terraform state is stored remotely in an S3 bucket (`mdekort.tfstate`) in the `eu-west-1` region.
