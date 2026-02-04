@@ -117,6 +117,10 @@ repositories:
       - name: CLOUDFLARE_API_TOKEN
         value_ref: tf_cloudflare.api_token_mta_sts
 
+  network-documentation:
+    type: private
+    description: "Complete documentation of home network infrastructure"
+
   password-store:
     type: private
     description: "Password management should be simple and follow Unix philosophy"
