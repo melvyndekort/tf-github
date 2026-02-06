@@ -125,6 +125,10 @@ repositories:
     type: private
     description: "Password management should be simple and follow Unix philosophy"
 
+  internal-dns:
+    type: private
+    description: "Single source of truth for internal DNS entries across all PiHole servers"
+
   router-events:
     type: public
     description: "Process events sent by a router"
