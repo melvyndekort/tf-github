@@ -136,6 +136,10 @@ repositories:
         key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFMfp3WyB9WIYB3ojtZ4DfZw7naRyjRWmfLDx+pkNTQo lmserver-deploy-key"
         read_only: true
 
+  internal-dns-sync:
+    type: public
+    description: "Container image for syncing internal DNS entries to PiHole servers"
+
   router-events:
     type: public
     description: "Process events sent by a router"
