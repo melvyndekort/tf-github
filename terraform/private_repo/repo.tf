@@ -49,3 +49,12 @@ resource "github_branch_default" "main" {
   repository = github_repository.repo.name
   branch     = data.github_branch.main.branch
 }
+
+resource "github_repository_deploy_key" "keys" {
+  for_each = { for key in var.deploy_keys : key.title => key }
+
+  repository = github_repository.repo.name
+  title      = each.value.title
+  key        = each.value.key
+  read_only  = each.value.read_only
+}

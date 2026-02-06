@@ -53,6 +53,7 @@ module "private_repos" {
 
   name        = each.key
   description = each.value.description
+  deploy_keys = try(each.value.deploy_keys, [])
 }
 
 # Custom repositories (like melvyndekort.github.io)
