@@ -129,9 +129,6 @@ repositories:
     type: private
     description: "Single source of truth for internal DNS entries across all PiHole servers"
     deploy_keys:
-      - title: "pihole-1"
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA4sudgXWHbDkOYjUqn4//upFQnhcGMW08IgmmM25MII pihole-1-deploy-key"
-        read_only: true
       - title: "lmserver"
         key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFMfp3WyB9WIYB3ojtZ4DfZw7naRyjRWmfLDx+pkNTQo lmserver-deploy-key"
         read_only: true
