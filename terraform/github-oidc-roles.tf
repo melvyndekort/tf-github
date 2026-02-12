@@ -23,9 +23,9 @@ locals {
       repo_name = "melvyndekort/cheatsheets"
       role_name = "github-actions-cheatsheets"
     }
-    "lmserver" = {
-      repo_name = "melvyndekort/lmserver"
-      role_name = "github-actions-lmserver"
+    "homelab" = {
+      repo_name = "melvyndekort/homelab"
+      role_name = "github-actions-homelab"
     }
     "ignition" = {
       repo_name = "melvyndekort/ignition"

@@ -147,7 +147,7 @@ resource "github_actions_secret" "repo_secrets" {
     "tf_cloudflare.api_token_assets"             = data.terraform_remote_state.tf_cloudflare.outputs.api_token_assets
     "tf_cloudflare.github_actions_client_id"     = data.terraform_remote_state.tf_cloudflare.outputs.github_actions_client_id
     "tf_cloudflare.github_actions_client_secret" = data.terraform_remote_state.tf_cloudflare.outputs.github_actions_client_secret
-    "github_actions_lmserver_role_arn"           = aws_iam_role.github_actions["lmserver"].arn
+    "github_actions_homelab_role_arn"            = aws_iam_role.github_actions["homelab"].arn
     "github_actions_ignition_role_arn"           = aws_iam_role.github_actions["ignition"].arn
     "github_actions_aws_ntfy_alerts_role_arn"    = aws_iam_role.github_actions["aws-ntfy-alerts"].arn
     "github_actions_tf_github_role_arn"          = data.aws_iam_role.tf_github_role.arn

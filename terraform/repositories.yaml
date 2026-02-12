@@ -28,12 +28,12 @@ repositories:
       - name: CLOUDFLARE_API_TOKEN
         value_ref: tf_cloudflare.api_token_cheatsheets
 
-  lmserver:
+  homelab:
     type: private
     description: "Docker compose stack to run all lmserver software"
     secrets:
       - name: AWS_ROLE_ARN
-        value_ref: github_actions_lmserver_role_arn
+        value_ref: github_actions_homelab_role_arn
       - name: CLOUDFLARE_CLIENT_ID
         value_ref: tf_cloudflare.github_actions_client_id
       - name: CLOUDFLARE_CLIENT_SECRET
