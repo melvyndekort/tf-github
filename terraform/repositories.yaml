@@ -47,6 +47,10 @@ repositories:
     type: public
     description: "This repository contains all the important dotfiles in my Linux home directory based on the chezmoi dotfile manager."
 
+  secrets-sync:
+    type: public
+    description: "Container to sync and decrypt SOPS-encrypted secrets from Git"
+
   email-infra:
     type: public
     description: "Email infrastructure with DMARC collection and DNS management"
