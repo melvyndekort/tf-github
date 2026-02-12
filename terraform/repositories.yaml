@@ -38,6 +38,10 @@ repositories:
         value_ref: tf_cloudflare.github_actions_client_id
       - name: CLOUDFLARE_CLIENT_SECRET
         value_ref: tf_cloudflare.github_actions_client_secret
+    deploy_keys:
+      - title: secrets-sync
+        key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGg4ZosYsBzCrE5YfmsJh+DSozK8ilfF/Q8YNSB7h+GZ homelab-secrets-sync
+        read_only: true
 
   dotfiles:
     type: public
