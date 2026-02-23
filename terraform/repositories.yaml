@@ -57,6 +57,10 @@ repositories:
     secrets:
       - name: AWS_ROLE_ARN
         value_ref: github_actions_email_infra_role_arn
+      - name: CLOUDFLARE_ACCOUNT_ID
+        value_ref: cloudflare_account_id
+      - name: CLOUDFLARE_API_TOKEN
+        value_ref: tf_cloudflare.api_token_mta_sts
 
   dracula-hugo-theme:
     type: public
