@@ -141,7 +141,6 @@ resource "github_actions_secret" "repo_secrets" {
     "tf_cloudflare.api_token_startpage"  = data.terraform_remote_state.tf_cloudflare.outputs.api_token_startpage
     "tf_cloudflare.api_token_ignition"   = data.terraform_remote_state.tf_cloudflare.outputs.api_token_ignition
     "tf_cloudflare.api_token_melvyn_dev" = data.terraform_remote_state.tf_cloudflare.outputs.api_token_melvyn_dev
-
     "tf_cloudflare.api_token_mta_sts"            = data.terraform_remote_state.tf_cloudflare.outputs.api_token_mta_sts
     "tf_cloudflare.api_token_cheatsheets"        = data.terraform_remote_state.tf_cloudflare.outputs.api_token_cheatsheets
     "tf_cloudflare.api_token_assets"             = data.terraform_remote_state.tf_cloudflare.outputs.api_token_assets
@@ -162,7 +161,6 @@ resource "github_actions_secret" "repo_secrets" {
     "github_actions_melvyn_dev_role_arn"         = aws_iam_role.github_actions["melvyn-dev"].arn
     "github_actions_assets_role_arn"             = aws_iam_role.github_actions["assets"].arn
     "github_actions_cheatsheets_role_arn"        = aws_iam_role.github_actions["cheatsheets"].arn
-    "github_actions_mta_sts_role_arn"            = aws_iam_role.github_actions["mta-sts"].arn
     "github_actions_get_cookies_role_arn"        = aws_iam_role.github_actions["get-cookies"].arn
     "github_actions_example_melvyn_dev_role_arn" = aws_iam_role.github_actions["example.melvyn.dev"].arn
     "github_actions_startpage_role_arn"          = aws_iam_role.github_actions["startpage"].arn

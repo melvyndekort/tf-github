@@ -36,10 +36,6 @@ locals {
       repo_name = "melvyndekort/melvyn-dev"
       role_name = "github-actions-melvyn-dev"
     }
-    "mta-sts" = {
-      repo_name = "melvyndekort/mta-sts"
-      role_name = "github-actions-mta-sts"
-    }
     "tf-aws" = {
       repo_name = "melvyndekort/tf-aws"
       role_name = "github-actions-tf-aws"

@@ -118,17 +118,6 @@ repositories:
       - name: CLOUDFLARE_API_TOKEN
         value_ref: tf_cloudflare.api_token_melvyn_dev
 
-  mta-sts:
-    type: public
-    description: "This repository contains my MTA-STS configuration"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_mta_sts_role_arn
-      - name: CLOUDFLARE_ACCOUNT_ID
-        value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_mta_sts
-
   network-documentation:
     type: private
     description: "Complete documentation of home network infrastructure"
