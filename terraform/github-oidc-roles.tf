@@ -81,8 +81,9 @@ locals {
       role_name = "github-actions-email-infra"
     }
     "network-monitor" = {
-      repo_name = "melvyndekort/network-monitor"
-      role_name = "github-actions-network-monitor"
+      repo_name    = "melvyndekort/network-monitor"
+      role_name    = "github-actions-network-monitor"
+      subaccounts  = ["arn:aws:iam::844347863910:role/AdminRole"]
     }
   }
 }
@@ -121,10 +122,26 @@ resource "aws_iam_role" "github_actions" {
 }
 
 resource "aws_iam_role_policy_attachment" "github_actions_admin" {
-  for_each = local.github_repos
+  for_each = { for k, v in local.github_repos : k => v if !can(v.subaccounts) }
 
   role       = aws_iam_role.github_actions[each.key].name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+data "aws_iam_policy_document" "github_actions_subaccount_assume" {
+  for_each = { for k, v in local.github_repos : k => v if can(v.subaccounts) }
+
+  statement {
+    actions   = ["sts:AssumeRole"]
+    resources = each.value.subaccounts
+  }
+}
+
+resource "aws_iam_role_policy" "github_actions_subaccount_assume" {
+  for_each = { for k, v in local.github_repos : k => v if can(v.subaccounts) }
+
+  role   = aws_iam_role.github_actions[each.key].name
+  policy = data.aws_iam_policy_document.github_actions_subaccount_assume[each.key].json
 }
 
 output "github_actions_role_arns" {
