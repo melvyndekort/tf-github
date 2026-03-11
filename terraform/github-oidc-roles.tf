@@ -80,6 +80,10 @@ locals {
       repo_name = "melvyndekort/email-infra"
       role_name = "github-actions-email-infra"
     }
+    "network-monitor" = {
+      repo_name = "melvyndekort/network-monitor"
+      role_name = "github-actions-network-monitor"
+    }
   }
 }
 

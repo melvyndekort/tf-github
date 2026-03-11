@@ -208,3 +208,10 @@ repositories:
     secrets:
       - name: AWS_ROLE_ARN
         value_ref: github_actions_minecraft_server_role_arn
+
+  network-monitor:
+    type: public
+    description: "Serverless network device monitoring with event streaming"
+    secrets:
+      - name: AWS_ROLE_ARN
+        value_ref: github_actions_network_monitor_role_arn
