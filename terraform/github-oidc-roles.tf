@@ -132,7 +132,7 @@ data "aws_iam_policy_document" "github_actions_subaccount_assume" {
   for_each = { for k, v in local.github_repos : k => v if can(v.subaccounts) }
 
   statement {
-    actions   = ["sts:AssumeRole"]
+    actions   = ["sts:AssumeRole", "sts:TagSession"]
     resources = each.value.subaccounts
   }
 }
