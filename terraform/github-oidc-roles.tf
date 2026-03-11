@@ -81,9 +81,9 @@ locals {
       role_name = "github-actions-email-infra"
     }
     "network-monitor" = {
-      repo_name    = "melvyndekort/network-monitor"
-      role_name    = "github-actions-network-monitor"
-      subaccounts  = ["arn:aws:iam::844347863910:role/AdminRole"]
+      repo_name   = "melvyndekort/network-monitor"
+      role_name   = "github-actions-network-monitor"
+      subaccounts = ["arn:aws:iam::844347863910:role/AdminRole"]
     }
   }
 }
