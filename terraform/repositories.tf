@@ -64,9 +64,9 @@ resource "github_repository" "custom_repos" {
   description = each.value.description
   visibility  = try(each.value.visibility, "public")
 
-  has_issues    = try(each.value.has_issues, true)
-  has_projects  = false
-  has_wiki      = false
+  has_issues   = try(each.value.has_issues, true)
+  has_projects = false
+  has_wiki     = false
 
   auto_init              = true
   allow_auto_merge       = true

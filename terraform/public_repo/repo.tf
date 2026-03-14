@@ -4,9 +4,9 @@ resource "github_repository" "repo" {
 
   visibility = "public"
 
-  has_issues    = true
-  has_projects  = false
-  has_wiki      = false
+  has_issues   = true
+  has_projects = false
+  has_wiki     = false
 
   auto_init              = true
   allow_auto_merge       = true
