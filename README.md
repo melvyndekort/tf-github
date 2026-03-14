@@ -29,9 +29,10 @@ The infrastructure is defined using Terraform and manages:
 │   ├── secrets.tf          # Secret management
 │   ├── secrets.yaml.encrypted # Encrypted secrets file
 │   ├── remote-state.tf     # Remote state configuration
-│   ├── public_repo/        # Public repository modules
-│   └── private_repo/       # Private repository modules
-├── bootstrap/              # Bootstrap scripts
+│   ├── github-oidc-roles.tf # OIDC role management
+│   ├── oidc_role/          # OIDC role module
+│   ├── public_repo/        # Public repository module
+│   └── private_repo/       # Private repository module
 ├── Makefile               # Automation commands
 └── README.md              # This file
 ```
@@ -99,8 +100,11 @@ make clean_secrets
 ### Adding a New Repository
 
 1. Add the repository configuration to `terraform/repositories.yaml`
-2. Run `terraform plan` to review changes
-3. Run `terraform apply` to create the repository
+2. To create an OIDC role, add `aws_account: "<account_id>"` to the repo config
+3. Run `terraform plan` to review changes
+4. Run `terraform apply` to create the repository
+
+Adding a new AWS account requires a provider alias and module block in `github-oidc-roles.tf`.
 
 ### Managing Secrets
 
