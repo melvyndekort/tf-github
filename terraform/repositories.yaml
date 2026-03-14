@@ -2,9 +2,8 @@ repositories:
   assets:
     type: public
     description: "This repository contains my static resources site"
+    aws_account: "075673041815"
     secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_assets_role_arn
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
       - name: CLOUDFLARE_API_TOKEN
@@ -13,16 +12,13 @@ repositories:
   aws-ntfy-alerts:
     type: public
     description: "AWS alerting system that forwards SNS notifications to ntfy"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_aws_ntfy_alerts_role_arn
+    aws_account: "075673041815"
 
   cheatsheets:
     type: public
     description: "Documentation used in my custom Arch setup"
+    aws_account: "075673041815"
     secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_cheatsheets_role_arn
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
       - name: CLOUDFLARE_API_TOKEN
@@ -31,9 +27,8 @@ repositories:
   homelab:
     type: private
     description: "Docker compose stack to run all lmserver software"
+    aws_account: "075673041815"
     secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_homelab_role_arn
       - name: CLOUDFLARE_CLIENT_ID
         value_ref: tf_cloudflare.github_actions_client_id
       - name: CLOUDFLARE_CLIENT_SECRET
@@ -54,9 +49,8 @@ repositories:
   email-infra:
     type: public
     description: "Email infrastructure with DMARC collection and DNS management"
+    aws_account: "075673041815"
     secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_email_infra_role_arn
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
       - name: CLOUDFLARE_API_TOKEN
@@ -69,24 +63,19 @@ repositories:
   "example.melvyn.dev":
     type: public
     description: "Example static website"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_example_melvyn_dev_role_arn
+    aws_account: "075673041815"
 
   get-cookies:
     type: public
     description: "A serverless authentication solution which converts JWT tokens to AWS Cloudfront signed cookies"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_get_cookies_role_arn
+    aws_account: "075673041815"
 
   ignition:
     type: public
     description: "This repository contains my ignition files for Fedora CoreOS"
+    aws_account: "075673041815"
     allowed_actions_config: []
     secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_ignition_role_arn
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
       - name: CLOUDFLARE_API_TOKEN
@@ -110,9 +99,8 @@ repositories:
   melvyn-dev:
     type: public
     description: "Public website"
+    aws_account: "075673041815"
     secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_melvyn_dev_role_arn
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
       - name: CLOUDFLARE_API_TOKEN
@@ -141,9 +129,8 @@ repositories:
   startpage:
     type: private
     description: "Public website"
+    aws_account: "075673041815"
     secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_startpage_role_arn
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
       - name: CLOUDFLARE_API_TOKEN
@@ -156,62 +143,43 @@ repositories:
   tf-aws:
     type: public
     description: "Manage centralized AWS resources using Terraform"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_tf_aws_role_arn
+    aws_account: "075673041815"
 
   tf-cloudflare:
     type: public
     description: "Centrally manage cloudflare configuration"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_tf_cloudflare_role_arn
+    aws_account: "075673041815"
 
   tf-grafana:
     type: public
     description: "Terraform configuration for managing Grafana Cloud infrastructure"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_tf_grafana_role_arn
+    aws_account: "075673041815"
 
   tf-github:
     type: public
     description: "Centrally manage github configuration"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_tf_github_role_arn
 
   tf-backup:
     type: public
     description: "Terraform configuration for managing backup infrastructure"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_tf_backup_role_arn
+    aws_account: "075673041815"
 
   tf-cloudtrail:
     type: public
     description: "Terraform configuration for AWS CloudTrail setup"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_tf_cloudtrail_role_arn
+    aws_account: "075673041815"
 
   tf-cognito:
     type: public
     description: "Terraform configuration for AWS Cognito authentication"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_tf_cognito_role_arn
+    aws_account: "075673041815"
 
   minecraft-server:
     type: public
     description: "A Minecraft server on AWS ECS"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_minecraft_server_role_arn
+    aws_account: "075673041815"
 
   network-monitor:
     type: public
     description: "Serverless network device monitoring with event streaming"
-    secrets:
-      - name: AWS_ROLE_ARN
-        value_ref: github_actions_network_monitor_role_arn
+    aws_account: "844347863910"

@@ -4,7 +4,6 @@ resource "github_repository" "repo" {
 
   visibility = "public"
 
-  has_downloads = false
   has_issues    = true
   has_projects  = false
   has_wiki      = false

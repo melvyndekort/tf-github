@@ -1,10 +1,18 @@
-# GitHub OIDC role for tf-github repository only
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
 
 data "aws_iam_openid_connect_provider" "github" {
   url = "https://token.actions.githubusercontent.com"
 }
 
-data "aws_iam_policy_document" "github_actions_assume" {
+data "aws_iam_policy_document" "assume" {
+  for_each = var.repos
+
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
 
@@ -22,22 +30,22 @@ data "aws_iam_policy_document" "github_actions_assume" {
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:melvyndekort/tf-github:ref:refs/heads/main"]
+      values   = ["repo:${var.github_org}/${each.key}:ref:refs/heads/main"]
     }
   }
 }
 
 resource "aws_iam_role" "github_actions" {
-  name               = "github-actions-tf-github"
+  for_each = var.repos
+
+  name               = "github-actions-${replace(each.key, ".", "-")}"
   path               = "/external/"
-  assume_role_policy = data.aws_iam_policy_document.github_actions_assume.json
+  assume_role_policy = data.aws_iam_policy_document.assume[each.key].json
 }
 
-resource "aws_iam_role_policy_attachment" "github_actions_admin" {
-  role       = aws_iam_role.github_actions.name
+resource "aws_iam_role_policy_attachment" "admin" {
+  for_each = var.repos
+
+  role       = aws_iam_role.github_actions[each.key].name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-}
-
-output "github_actions_role_arn" {
-  value = aws_iam_role.github_actions.arn
 }

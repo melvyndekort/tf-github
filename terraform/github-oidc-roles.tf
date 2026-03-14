@@ -1,156 +1,64 @@
 # GitHub OIDC roles for all repositories except tf-github (managed in bootstrap)
 
-data "aws_iam_openid_connect_provider" "github" {
-  url = "https://token.actions.githubusercontent.com"
-}
-
 # Data source for tf-github role managed in bootstrap
 data "aws_iam_role" "tf_github_role" {
   name = "github-actions-tf-github"
 }
 
+# Providers per account
+provider "aws" {
+  alias  = "account_844347863910"
+  region = "eu-west-1"
+
+  assume_role {
+    role_arn = "arn:aws:iam::844347863910:role/AdminRole"
+  }
+}
+
+# Derive OIDC role lists from repositories.yaml
 locals {
-  github_repos = {
-    "assets" = {
-      repo_name = "melvyndekort/assets"
-      role_name = "github-actions-assets"
-    }
-    "aws-ntfy-alerts" = {
-      repo_name = "melvyndekort/aws-ntfy-alerts"
-      role_name = "github-actions-aws-ntfy-alerts"
-    }
-    "cheatsheets" = {
-      repo_name = "melvyndekort/cheatsheets"
-      role_name = "github-actions-cheatsheets"
-    }
-    "homelab" = {
-      repo_name = "melvyndekort/homelab"
-      role_name = "github-actions-homelab"
-    }
-    "ignition" = {
-      repo_name = "melvyndekort/ignition"
-      role_name = "github-actions-ignition"
-    }
+  github_org = "melvyndekort"
 
-    "melvyn-dev" = {
-      repo_name = "melvyndekort/melvyn-dev"
-      role_name = "github-actions-melvyn-dev"
-    }
-    "tf-aws" = {
-      repo_name = "melvyndekort/tf-aws"
-      role_name = "github-actions-tf-aws"
-    }
-    "tf-cloudflare" = {
-      repo_name = "melvyndekort/tf-cloudflare"
-      role_name = "github-actions-tf-cloudflare"
-    }
-    "tf-grafana" = {
-      repo_name = "melvyndekort/tf-grafana"
-      role_name = "github-actions-tf-grafana"
-    }
-    "tf-backup" = {
-      repo_name = "melvyndekort/tf-backup"
-      role_name = "github-actions-tf-backup"
-    }
-    "tf-cloudtrail" = {
-      repo_name = "melvyndekort/tf-cloudtrail"
-      role_name = "github-actions-tf-cloudtrail"
-    }
-    "tf-cognito" = {
-      repo_name = "melvyndekort/tf-cognito"
-      role_name = "github-actions-tf-cognito"
-    }
-    "minecraft-server" = {
-      repo_name = "melvyndekort/minecraft-server"
-      role_name = "github-actions-minecraft-server"
-    }
-    "get-cookies" = {
-      repo_name = "melvyndekort/get-cookies"
-      role_name = "github-actions-get-cookies"
-    }
-    "example.melvyn.dev" = {
-      repo_name = "melvyndekort/example.melvyn.dev"
-      role_name = "github-actions-example-melvyn-dev"
-    }
-    "startpage" = {
-      repo_name = "melvyndekort/startpage"
-      role_name = "github-actions-startpage"
-    }
-    "email-infra" = {
-      repo_name = "melvyndekort/email-infra"
-      role_name = "github-actions-email-infra"
-    }
-    "network-monitor" = {
-      repo_name   = "melvyndekort/network-monitor"
-      role_name   = "github-actions-network-monitor"
-      subaccounts = ["arn:aws:iam::844347863910:role/AdminRole"]
-    }
+  oidc_repos_by_account = {
+    for account_id in distinct([
+      for name, config in local.repositories_config.repositories :
+      config.aws_account if can(config.aws_account)
+    ]) :
+    account_id => toset([
+      for name, config in local.repositories_config.repositories :
+      name if try(config.aws_account, null) == account_id
+    ])
   }
 }
 
-data "aws_iam_policy_document" "github_actions_assume" {
-  for_each = local.github_repos
+# One module instance per account
 
-  statement {
-    actions = ["sts:AssumeRoleWithWebIdentity"]
+module "oidc_roles_075673041815" {
+  source     = "./oidc_role"
+  github_org = local.github_org
+  repos      = local.oidc_repos_by_account["075673041815"]
+}
 
-    principals {
-      type        = "Federated"
-      identifiers = [data.aws_iam_openid_connect_provider.github.arn]
-    }
+module "oidc_roles_844347863910" {
+  source     = "./oidc_role"
+  github_org = local.github_org
+  repos      = local.oidc_repos_by_account["844347863910"]
 
-    condition {
-      test     = "StringEquals"
-      variable = "token.actions.githubusercontent.com:aud"
-      values   = ["sts.amazonaws.com"]
-    }
-
-    condition {
-      test     = "StringEquals"
-      variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${each.value.repo_name}:ref:refs/heads/main"]
-    }
+  providers = {
+    aws = aws.account_844347863910
   }
 }
 
-resource "aws_iam_role" "github_actions" {
-  for_each = local.github_repos
-
-  name               = each.value.role_name
-  path               = "/external/"
-  assume_role_policy = data.aws_iam_policy_document.github_actions_assume[each.key].json
-}
-
-resource "aws_iam_role_policy_attachment" "github_actions_admin" {
-  for_each = { for k, v in local.github_repos : k => v if !can(v.subaccounts) }
-
-  role       = aws_iam_role.github_actions[each.key].name
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-}
-
-data "aws_iam_policy_document" "github_actions_subaccount_assume" {
-  for_each = { for k, v in local.github_repos : k => v if can(v.subaccounts) }
-
-  statement {
-    actions   = ["sts:AssumeRole", "sts:TagSession"]
-    resources = each.value.subaccounts
-  }
-}
-
-resource "aws_iam_role_policy" "github_actions_subaccount_assume" {
-  for_each = { for k, v in local.github_repos : k => v if can(v.subaccounts) }
-
-  role   = aws_iam_role.github_actions[each.key].name
-  policy = data.aws_iam_policy_document.github_actions_subaccount_assume[each.key].json
-}
-
-output "github_actions_role_arns" {
-  value = merge(
-    {
-      for k, v in aws_iam_role.github_actions : k => v.arn
-    },
+locals {
+  all_role_arns = merge(
+    module.oidc_roles_075673041815.role_arns,
+    module.oidc_roles_844347863910.role_arns,
     {
       "tf-github" = data.aws_iam_role.tf_github_role.arn
     }
   )
+}
+
+output "github_actions_role_arns" {
+  value = local.all_role_arns
 }

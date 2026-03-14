@@ -64,7 +64,6 @@ resource "github_repository" "custom_repos" {
   description = each.value.description
   visibility  = try(each.value.visibility, "public")
 
-  has_downloads = false
   has_issues    = try(each.value.has_issues, true)
   has_projects  = false
   has_wiki      = false
@@ -146,25 +145,22 @@ resource "github_actions_secret" "repo_secrets" {
     "tf_cloudflare.api_token_assets"             = data.terraform_remote_state.tf_cloudflare.outputs.api_token_assets
     "tf_cloudflare.github_actions_client_id"     = data.terraform_remote_state.tf_cloudflare.outputs.github_actions_client_id
     "tf_cloudflare.github_actions_client_secret" = data.terraform_remote_state.tf_cloudflare.outputs.github_actions_client_secret
-    "github_actions_homelab_role_arn"            = aws_iam_role.github_actions["homelab"].arn
-    "github_actions_ignition_role_arn"           = aws_iam_role.github_actions["ignition"].arn
-    "github_actions_aws_ntfy_alerts_role_arn"    = aws_iam_role.github_actions["aws-ntfy-alerts"].arn
-    "github_actions_tf_github_role_arn"          = data.aws_iam_role.tf_github_role.arn
-    "github_actions_tf_cloudflare_role_arn"      = aws_iam_role.github_actions["tf-cloudflare"].arn
-    "github_actions_tf_grafana_role_arn"         = aws_iam_role.github_actions["tf-grafana"].arn
-    "github_actions_minecraft_server_role_arn"   = aws_iam_role.github_actions["minecraft-server"].arn
-    "github_actions_tf_aws_role_arn"             = aws_iam_role.github_actions["tf-aws"].arn
-    "github_actions_tf_backup_role_arn"          = aws_iam_role.github_actions["tf-backup"].arn
-    "github_actions_tf_cloudtrail_role_arn"      = aws_iam_role.github_actions["tf-cloudtrail"].arn
-    "github_actions_tf_cognito_role_arn"         = aws_iam_role.github_actions["tf-cognito"].arn
-
-    "github_actions_melvyn_dev_role_arn"         = aws_iam_role.github_actions["melvyn-dev"].arn
-    "github_actions_assets_role_arn"             = aws_iam_role.github_actions["assets"].arn
-    "github_actions_cheatsheets_role_arn"        = aws_iam_role.github_actions["cheatsheets"].arn
-    "github_actions_get_cookies_role_arn"        = aws_iam_role.github_actions["get-cookies"].arn
-    "github_actions_example_melvyn_dev_role_arn" = aws_iam_role.github_actions["example.melvyn.dev"].arn
-    "github_actions_startpage_role_arn"          = aws_iam_role.github_actions["startpage"].arn
-    "github_actions_email_infra_role_arn"        = aws_iam_role.github_actions["email-infra"].arn
-    "github_actions_network_monitor_role_arn"    = aws_iam_role.github_actions["network-monitor"].arn
   }, each.value.value_ref, "")
+}
+
+# AWS_ROLE_ARN secrets - automatically created for all repos with an aws_account
+resource "github_actions_secret" "oidc_role_arn" {
+  for_each = {
+    for name, arn in local.all_role_arns :
+    name => arn
+    if contains(keys(local.repositories_config.repositories), name)
+  }
+
+  repository = try(
+    module.public_repos[each.key].repo_name,
+    module.private_repos[each.key].repo_name,
+    github_repository.custom_repos[each.key].name
+  )
+  secret_name     = "AWS_ROLE_ARN"
+  plaintext_value = each.value
 }
