@@ -136,7 +136,7 @@ This setting is required for dependabot workflows to automatically approve and m
 
 ## Remote State
 
-Terraform state is stored remotely in an S3 bucket (`mdekort.tfstate`) in the `eu-west-1` region.
+Terraform state is stored remotely in an S3 bucket (`mdekort-tfstate-075673041815`) in the `eu-west-1` region.
 
 ## Security
 
