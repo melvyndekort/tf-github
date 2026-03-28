@@ -22,3 +22,6 @@ encrypt:
 		--output text \
 		--query CiphertextBlob > terraform/secrets.yaml.encrypted
 	@rm -f terraform/secrets.yaml
+
+fmt:
+	@terraform -chdir=terraform fmt
