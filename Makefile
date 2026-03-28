@@ -25,3 +25,12 @@ encrypt:
 
 fmt:
 	@terraform -chdir=terraform fmt
+
+init:
+	@terraform -chdir=terraform init
+
+plan: init decrypt
+	@terraform -chdir=terraform plan
+
+apply: init decrypt
+	@terraform -chdir=terraform apply
