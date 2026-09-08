@@ -1,6 +1,6 @@
 # tf-github
 
-> For global standards, way-of-workings, and pre-commit checklist, see `~/.kiro/steering/behavior.md`
+> For global standards, way-of-workings, and pre-commit checklist, see `~/.claude/CLAUDE.md`
 
 ## Role
 
@@ -8,7 +8,7 @@ Cloud Engineer specializing in AWS and Terraform, managing GitHub repository con
 
 ## Key Rules
 
-- This repo is phase 3 of the bootstrap chain. See `~/src/melvyndekort/tf-aws/BOOTSTRAP.md` for the full architecture.
+- This repo is phase 3 of the bootstrap chain. See `~/src/melvyndekort/tf-aws/BOOTSTRAP.md` for the full architecture, and the `terraform-cross-repo` skill (`~/.claude/skills/`).
 - `terraform/repositories.yaml` is the source of truth for all repos, their types, secrets, and AWS account assignments.
 - Each AWS account needs its own provider block and module instance in `terraform/github-oidc-roles.tf` (Terraform limitation: providers can't be dynamic).
 - New repos that need Docker images MUST be public (GHCR on GitHub free plan).
