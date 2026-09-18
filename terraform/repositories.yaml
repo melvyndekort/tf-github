@@ -151,6 +151,11 @@ repositories:
     description: "Terraform configuration for managing Grafana Cloud infrastructure"
     aws_account: "075673041815"
 
+  kids-monitor:
+    type: public
+    description: "Grafana Cloud dashboards for the kids' network activity"
+    aws_account: "075673041815"
+
   tf-github:
     type: public
     description: "Centrally manage github configuration"
