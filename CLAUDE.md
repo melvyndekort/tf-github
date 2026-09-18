@@ -13,6 +13,7 @@ Cloud Engineer specializing in AWS and Terraform, managing GitHub repository con
 - Each AWS account needs its own provider block and module instance in `terraform/github-oidc-roles.tf` (Terraform limitation: providers can't be dynamic).
 - New repos that need Docker images MUST be public (GHCR on GitHub free plan).
 - New repos that need AWS MUST use a dedicated subaccount (add to tf-aws first).
+- `oidc_role` trust policies use GitHub's immutable-subject claim format (owner_id/repo_id, not repo name) — see `~/src/melvyndekort/tf-aws/BOOTSTRAP.md` → "GitHub OIDC subject format" before debugging any OIDC assume-role failure.
 
 ## Repository Structure
 
