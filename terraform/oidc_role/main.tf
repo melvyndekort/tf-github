@@ -30,7 +30,11 @@ data "aws_iam_policy_document" "assume" {
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_org}/${each.key}:ref:refs/heads/main"]
+      values = [
+        # Immutable-subject format (embeds owner_id/repo_id), GitHub's
+        # current default for newly created repos.
+        "repo:${var.github_org}@${var.github_owner_id}/${each.key}@${each.value}:ref:refs/heads/main",
+      ]
     }
   }
 }

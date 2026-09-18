@@ -17,32 +17,42 @@ provider "aws" {
 
 # Derive OIDC role lists from repositories.yaml
 locals {
-  github_org = "melvyndekort"
+  github_org      = "melvyndekort"
+  github_owner_id = tonumber(data.github_user.melvyn.id)
+
+  # repo name => numeric repo_id, across all repo types
+  repo_ids = merge(
+    { for k, m in module.public_repos : k => tonumber(m.repo_id) },
+    { for k, m in module.private_repos : k => tonumber(m.repo_id) },
+    { for k, r in github_repository.custom_repos : k => tonumber(r.repo_id) },
+  )
 
   oidc_repos_by_account = {
     for account_id in distinct([
       for name, config in local.repositories_config.repositories :
       config.aws_account if can(config.aws_account)
     ]) :
-    account_id => toset([
+    account_id => {
       for name, config in local.repositories_config.repositories :
-      name if try(config.aws_account, null) == account_id
-    ])
+      name => local.repo_ids[name] if try(config.aws_account, null) == account_id
+    }
   }
 }
 
 # One module instance per account
 
 module "oidc_roles_075673041815" {
-  source     = "./oidc_role"
-  github_org = local.github_org
-  repos      = local.oidc_repos_by_account["075673041815"]
+  source          = "./oidc_role"
+  github_org      = local.github_org
+  github_owner_id = local.github_owner_id
+  repos           = local.oidc_repos_by_account["075673041815"]
 }
 
 module "oidc_roles_844347863910" {
-  source     = "./oidc_role"
-  github_org = local.github_org
-  repos      = local.oidc_repos_by_account["844347863910"]
+  source          = "./oidc_role"
+  github_org      = local.github_org
+  github_owner_id = local.github_owner_id
+  repos           = local.oidc_repos_by_account["844347863910"]
 
   providers = {
     aws = aws.account_844347863910

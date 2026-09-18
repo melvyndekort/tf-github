@@ -5,3 +5,7 @@ output "repo_name" {
 output "node_id" {
   value = github_repository.repo.node_id
 }
+
+output "repo_id" {
+  value = github_repository.repo.repo_id
+}
