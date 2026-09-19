@@ -10,13 +10,7 @@ updates:
       - "melvyndekort"
     reviewers:
       - "melvyndekort"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    assignees:
-      - "melvyndekort"
-    reviewers:
-      - "melvyndekort"
+
   - package-ecosystem: "terraform"
     directory: "/terraform"
     schedule:
