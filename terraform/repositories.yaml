@@ -184,3 +184,8 @@ repositories:
     type: public
     description: "Serverless network device monitoring with event streaming"
     aws_account: "844347863910"
+
+  hermes-agent:
+    type: private
+    description: "Self-hosted Hermes Agent on ECS Fargate Spot"
+    aws_account: "520519513359"

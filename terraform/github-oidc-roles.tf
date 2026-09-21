@@ -15,6 +15,15 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  alias  = "account_520519513359"
+  region = "eu-west-1"
+
+  assume_role {
+    role_arn = "arn:aws:iam::520519513359:role/external/github-actions-tf-github"
+  }
+}
+
 # Derive OIDC role lists from repositories.yaml
 locals {
   github_org      = "melvyndekort"
@@ -59,10 +68,22 @@ module "oidc_roles_844347863910" {
   }
 }
 
+module "oidc_roles_520519513359" {
+  source          = "./oidc_role"
+  github_org      = local.github_org
+  github_owner_id = local.github_owner_id
+  repos           = local.oidc_repos_by_account["520519513359"]
+
+  providers = {
+    aws = aws.account_520519513359
+  }
+}
+
 locals {
   all_role_arns = merge(
     module.oidc_roles_075673041815.role_arns,
     module.oidc_roles_844347863910.role_arns,
+    module.oidc_roles_520519513359.role_arns,
     {
       "tf-github" = data.aws_iam_role.tf_github_role.arn
     }
