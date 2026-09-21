@@ -28,9 +28,19 @@ resource "github_actions_repository_permissions" "repo" {
   }
 }
 
+resource "time_sleep" "vulnerability_alerts_propagation" {
+  create_duration = "30s"
+
+  triggers = {
+    repository_id = github_repository.repo.id
+  }
+}
+
 resource "github_repository_dependabot_security_updates" "repo" {
   repository = github_repository.repo.id
   enabled    = true
+
+  depends_on = [time_sleep.vulnerability_alerts_propagation]
 }
 
 resource "github_issue_label" "requires-manual-qa" {
