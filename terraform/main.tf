@@ -2,6 +2,10 @@ data "github_user" "melvyn" {
   username = "melvyndekort"
 }
 
+data "github_user" "hermes_agent" {
+  username = "mdekort-hermes"
+}
+
 locals {
   docker_username       = "melvyndekort"
   docker_password       = local.secrets.github.docker_password

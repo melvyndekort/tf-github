@@ -18,6 +18,19 @@ locals {
     name => config if config.type == "private"
   }
 
+  # Collaborators to add to all repos
+  global_collaborators = try(local.repositories_config.global_collaborators, [])
+
+  all_collaborators = flatten([
+    for repo_name in keys(local.repositories_config.repositories) : [
+      for username in local.global_collaborators : {
+        repo     = repo_name
+        username = username
+      }
+      if !contains(["password-store"], repo_name)
+    ]
+  ])
+
   custom_repos = {
     for name, config in local.repositories_config.repositories :
     name => config if config.type == "custom"
@@ -163,4 +176,15 @@ resource "github_actions_secret" "oidc_role_arn" {
   )
   secret_name     = "AWS_ROLE_ARN"
   plaintext_value = each.value
+}
+
+# Global collaborators (added to all repos except excluded ones)
+resource "github_repository_collaborator" "global_collaborators" {
+  for_each = {
+    for c in local.all_collaborators : "${c.repo}/${c.username}" => c
+  }
+
+  repository = each.value.repo
+  username   = each.value.username
+  permission = "push"
 }
