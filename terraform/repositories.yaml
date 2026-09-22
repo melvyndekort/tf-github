@@ -1,3 +1,6 @@
+global_collaborators:
+  - mdekort-hermes
+
 repositories:
   assets:
     type: public
