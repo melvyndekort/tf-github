@@ -12,6 +12,7 @@ resource "github_repository" "repo" {
   delete_branch_on_merge = true
   vulnerability_alerts   = true
   archive_on_destroy     = true
+  allow_forking          = var.allow_forking
 
   allow_update_branch = true
 }

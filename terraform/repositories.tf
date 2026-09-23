@@ -36,6 +36,23 @@ locals {
     name => config if config.type == "custom"
   }
 
+  # Reusable workflows live in a shared repo, and GitHub's allowed-actions
+  # policy applies to reusable workflows as well as actions. A repo must
+  # therefore allow-list them before it can call them. Opt-in per repo via
+  # `shared_workflows: true` in repositories.yaml, so repos that have not been
+  # migrated keep their current allow-list untouched.
+  shared_workflow_patterns = [
+    "melvyndekort/gha-workflows/.github/workflows/*@*",
+  ]
+
+  allowed_actions_by_repo = {
+    for name, config in local.repositories_config.repositories :
+    name => concat(
+      try(config.allowed_actions_config, []),
+      try(config.shared_workflows, false) ? local.shared_workflow_patterns : [],
+    )
+  }
+
   # Flatten secrets for easier processing
   all_secrets = flatten([
     for repo_name, config in local.repositories_config.repositories : [
@@ -56,7 +73,10 @@ module "public_repos" {
   name                   = each.key
   description            = each.value.description
   force_push_bypassers   = [data.github_user.melvyn.node_id]
-  allowed_actions_config = try(each.value.allowed_actions_config, [])
+  allowed_actions_config = local.allowed_actions_by_repo[each.key]
+  required_status_checks = try(each.value.required_status_checks, [])
+  required_review_count  = try(each.value.required_review_count, null)
+  allow_forking          = try(each.value.allow_forking, true)
 }
 
 # Private repositories using the module
@@ -64,9 +84,11 @@ module "private_repos" {
   for_each = local.private_repos
   source   = "./private_repo"
 
-  name        = each.key
-  description = each.value.description
-  deploy_keys = try(each.value.deploy_keys, [])
+  name                   = each.key
+  description            = each.value.description
+  deploy_keys            = try(each.value.deploy_keys, [])
+  allowed_actions_config = local.allowed_actions_by_repo[each.key]
+  allow_forking          = try(each.value.allow_forking, true)
 }
 
 # Custom repositories (like melvyndekort.github.io)
@@ -175,6 +197,23 @@ resource "github_actions_secret" "oidc_role_arn" {
     github_repository.custom_repos[each.key].name
   )
   secret_name     = "AWS_ROLE_ARN"
+  plaintext_value = each.value
+}
+
+# AWS_PLAN_ROLE_ARN secrets - only for repos that opted into a PR plan role
+resource "github_actions_secret" "oidc_plan_role_arn" {
+  for_each = {
+    for name, arn in local.all_plan_role_arns :
+    name => arn
+    if contains(keys(local.repositories_config.repositories), name)
+  }
+
+  repository = try(
+    module.public_repos[each.key].repo_name,
+    module.private_repos[each.key].repo_name,
+    github_repository.custom_repos[each.key].name
+  )
+  secret_name     = "AWS_PLAN_ROLE_ARN"
   plaintext_value = each.value
 }
 
