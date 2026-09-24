@@ -5,13 +5,36 @@ data "aws_iam_role" "tf_github_role" {
   name = "github-actions-tf-github"
 }
 
+# Same for its read-only plan counterpart, also created in bootstrap to avoid a
+# circular dependency (a plan role created here would only exist after an apply).
+data "aws_iam_role" "tf_github_plan_role" {
+  name = "github-actions-tf-github-plan"
+}
+
 # Providers per account
+#
+# The role assumed cross-account differs by trigger: applies use the admin role,
+# pull request plans use the read-only plan role. The default is the admin role,
+# so anything that does not set this variable keeps working unchanged; the shared
+# plan workflow passes the plan role via TF_VAR_subaccount_role_name.
+#
+# The value is not a secret (these names are public Terraform) and needs no
+# validation for safety: a pull request author may set it to anything, but the
+# plan role's IAM policy only permits assuming github-actions-tf-github-plan.
+# Verified with simulate-principal-policy: the admin role and AdminRole both
+# return implicitDeny. Authorisation is IAM's job, not this variable's.
+variable "subaccount_role_name" {
+  description = "Cross-account role to assume: the admin role for applies, the read-only plan role for PR plans"
+  type        = string
+  default     = "github-actions-tf-github"
+}
+
 provider "aws" {
   alias  = "account_844347863910"
   region = "eu-west-1"
 
   assume_role {
-    role_arn = "arn:aws:iam::844347863910:role/external/github-actions-tf-github"
+    role_arn = "arn:aws:iam::844347863910:role/external/${var.subaccount_role_name}"
   }
 }
 
@@ -20,7 +43,7 @@ provider "aws" {
   region = "eu-west-1"
 
   assume_role {
-    role_arn = "arn:aws:iam::520519513359:role/external/github-actions-tf-github"
+    role_arn = "arn:aws:iam::520519513359:role/external/${var.subaccount_role_name}"
   }
 }
 
@@ -136,6 +159,9 @@ locals {
     module.oidc_roles_075673041815.plan_role_arns,
     module.oidc_roles_844347863910.plan_role_arns,
     module.oidc_roles_520519513359.plan_role_arns,
+    {
+      "tf-github" = data.aws_iam_role.tf_github_plan_role.arn
+    }
   )
 }
 

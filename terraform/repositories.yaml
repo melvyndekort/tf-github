@@ -228,6 +228,10 @@ repositories:
   tf-github:
     type: public
     description: "Centrally manage github configuration"
+    shared_workflows: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
 
   tf-backup:
     type: public
