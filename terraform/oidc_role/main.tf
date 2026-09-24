@@ -123,3 +123,39 @@ resource "aws_iam_role_policy_attachment" "plan_readonly" {
   role       = aws_iam_role.github_actions_plan[each.key].name
   policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
 }
+
+# ReadOnlyAccess grants only kms:Describe*/Get*/List* -- NOT kms:Decrypt. Repos
+# whose plan calls `data.aws_kms_secrets` therefore cannot plan without this.
+#
+# Adding kms:Decrypt to the plan role's identity policy is sufficient and no
+# key-policy edit is needed: the `alias/generic` key policy already delegates to
+# `arn:aws:iam::<account>:root`, which lets identity policies in the SAME
+# account grant access. Verified -- the existing apply role is absent from the
+# key policy yet decrypts successfully, and simulate-principal-policy returns
+# `allowed` for it. Every KMS-using repo lives in the key's own account, so this
+# path covers all of them.
+#
+# Decrypt is scoped to the one key, and only for repos that opt in with
+# `pr_plan_kms_decrypt: true`. It does not widen what the role can mutate: the
+# role stays read-only, and the plan already reads these same secrets during an
+# apply. It does mean a PR plan can read that repo's decrypted secrets -- which
+# is why the trust policy pins `job_workflow_ref` to the shared plan workflow,
+# so PR-authored code never holds the credential.
+data "aws_iam_policy_document" "plan_kms_decrypt" {
+  for_each = var.plan_kms_key_arns
+
+  statement {
+    sid       = "DecryptPlanSecrets"
+    effect    = "Allow"
+    actions   = ["kms:Decrypt"]
+    resources = [each.value]
+  }
+}
+
+resource "aws_iam_role_policy" "plan_kms_decrypt" {
+  for_each = var.plan_kms_key_arns
+
+  name   = "kms-decrypt"
+  role   = aws_iam_role.github_actions_plan[each.key].name
+  policy = data.aws_iam_policy_document.plan_kms_decrypt[each.key].json
+}
