@@ -13,6 +13,7 @@ resource "github_repository" "repo" {
   delete_branch_on_merge = true
   vulnerability_alerts   = true
   archive_on_destroy     = true
+  allow_forking          = var.allow_forking
 
   allow_update_branch = true
 }
@@ -65,12 +66,14 @@ resource "github_branch_protection" "main" {
   allows_deletions                = false
 
   required_status_checks {
-    strict = false
+    strict   = false
+    contexts = var.required_status_checks
   }
 
   required_pull_request_reviews {
-    dismiss_stale_reviews      = true
-    require_last_push_approval = true
+    dismiss_stale_reviews           = true
+    require_last_push_approval      = true
+    required_approving_review_count = var.required_review_count
   }
 
   force_push_bypassers = var.force_push_bypassers

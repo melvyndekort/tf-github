@@ -192,3 +192,10 @@ repositories:
     type: private
     description: "Self-hosted Hermes Agent on ECS Fargate Spot"
     aws_account: "520519513359"
+
+  # Shared reusable workflows. Public so that public caller repos can reference
+  # it (a public repo may only call workflows from public repos). Holds no
+  # secrets and no AWS account of its own.
+  gha-workflows:
+    type: public
+    description: "Shared reusable GitHub Actions workflows"

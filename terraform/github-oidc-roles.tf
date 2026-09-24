@@ -46,22 +46,44 @@ locals {
       name => local.repo_ids[name] if try(config.aws_account, null) == account_id
     }
   }
+
+  # Opt-in subset: repos that additionally get a read-only PR plan role.
+  # A repo appears here only with `pr_plan_role: true` in repositories.yaml,
+  # so every other repo's plan stays unchanged.
+  plan_repos_by_account = {
+    for account_id, repos in local.oidc_repos_by_account :
+    account_id => {
+      for name, repo_id in repos :
+      name => repo_id
+      if try(local.repositories_config.repositories[name].pr_plan_role, false)
+    }
+  }
+
+  # The reusable workflows allowed to assume any PR plan role. Pinned to a tag
+  # in the shared workflow repo; bumping the tag is a deliberate change here.
+  plan_job_workflow_refs = [
+    "melvyndekort/gha-workflows/.github/workflows/terraform-pr-plan.yml@*",
+  ]
 }
 
 # One module instance per account
 
 module "oidc_roles_075673041815" {
-  source          = "./oidc_role"
-  github_org      = local.github_org
-  github_owner_id = local.github_owner_id
-  repos           = local.oidc_repos_by_account["075673041815"]
+  source                 = "./oidc_role"
+  github_org             = local.github_org
+  github_owner_id        = local.github_owner_id
+  repos                  = local.oidc_repos_by_account["075673041815"]
+  plan_repos             = local.plan_repos_by_account["075673041815"]
+  plan_job_workflow_refs = local.plan_job_workflow_refs
 }
 
 module "oidc_roles_844347863910" {
-  source          = "./oidc_role"
-  github_org      = local.github_org
-  github_owner_id = local.github_owner_id
-  repos           = local.oidc_repos_by_account["844347863910"]
+  source                 = "./oidc_role"
+  github_org             = local.github_org
+  github_owner_id        = local.github_owner_id
+  repos                  = local.oidc_repos_by_account["844347863910"]
+  plan_repos             = local.plan_repos_by_account["844347863910"]
+  plan_job_workflow_refs = local.plan_job_workflow_refs
 
   providers = {
     aws = aws.account_844347863910
@@ -69,10 +91,12 @@ module "oidc_roles_844347863910" {
 }
 
 module "oidc_roles_520519513359" {
-  source          = "./oidc_role"
-  github_org      = local.github_org
-  github_owner_id = local.github_owner_id
-  repos           = local.oidc_repos_by_account["520519513359"]
+  source                 = "./oidc_role"
+  github_org             = local.github_org
+  github_owner_id        = local.github_owner_id
+  repos                  = local.oidc_repos_by_account["520519513359"]
+  plan_repos             = local.plan_repos_by_account["520519513359"]
+  plan_job_workflow_refs = local.plan_job_workflow_refs
 
   providers = {
     aws = aws.account_520519513359
@@ -88,8 +112,18 @@ locals {
       "tf-github" = data.aws_iam_role.tf_github_role.arn
     }
   )
+
+  all_plan_role_arns = merge(
+    module.oidc_roles_075673041815.plan_role_arns,
+    module.oidc_roles_844347863910.plan_role_arns,
+    module.oidc_roles_520519513359.plan_role_arns,
+  )
 }
 
 output "github_actions_role_arns" {
   value = local.all_role_arns
+}
+
+output "github_actions_plan_role_arns" {
+  value = local.all_plan_role_arns
 }
