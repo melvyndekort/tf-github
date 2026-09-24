@@ -5,6 +5,77 @@ data "aws_iam_role" "tf_github_role" {
   name = "github-actions-tf-github"
 }
 
+# tf-github's own PR plan role. tf-github has no aws_account in
+# repositories.yaml (its apply role is bootstrapped in tf-aws, not created by
+# the oidc_role module), so the normal per-account plan-role machinery can't
+# produce one for it. Create it here as a special case, in the management
+# account (the default provider), mirroring the oidc_role module's plan-role
+# trust: pull_request subject, job_workflow_ref pinned to the shared plan
+# workflow, ReadOnlyAccess, plus kms:Decrypt on alias/generic because
+# tf-github's plan decrypts target=tf-github secrets (same account, so the
+# identity-policy grant suffices - no key-policy change).
+data "aws_iam_openid_connect_provider" "github_management" {
+  url = "https://token.actions.githubusercontent.com"
+}
+
+data "aws_iam_policy_document" "tf_github_plan_assume" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type        = "Federated"
+      identifiers = [data.aws_iam_openid_connect_provider.github_management.arn]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:sub"
+      values = [
+        "repo:${local.github_org}@${local.github_owner_id}/tf-github@${local.repo_ids["tf-github"]}:pull_request",
+      ]
+    }
+
+    condition {
+      test     = "StringLike"
+      variable = "token.actions.githubusercontent.com:job_workflow_ref"
+      values   = local.plan_job_workflow_refs
+    }
+  }
+}
+
+resource "aws_iam_role" "tf_github_plan" {
+  name               = "github-actions-tf-github-plan"
+  path               = "/external/"
+  description        = "Read-only role for terraform plan on pull requests in melvyndekort/tf-github"
+  assume_role_policy = data.aws_iam_policy_document.tf_github_plan_assume.json
+}
+
+resource "aws_iam_role_policy_attachment" "tf_github_plan_readonly" {
+  role       = aws_iam_role.tf_github_plan.name
+  policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+}
+
+data "aws_iam_policy_document" "tf_github_plan_kms_decrypt" {
+  statement {
+    sid       = "DecryptPlanSecrets"
+    effect    = "Allow"
+    actions   = ["kms:Decrypt"]
+    resources = [local.generic_kms_key_arn]
+  }
+}
+
+resource "aws_iam_role_policy" "tf_github_plan_kms_decrypt" {
+  name   = "kms-decrypt"
+  role   = aws_iam_role.tf_github_plan.name
+  policy = data.aws_iam_policy_document.tf_github_plan_kms_decrypt.json
+}
+
 # Providers per account
 provider "aws" {
   alias  = "account_844347863910"
@@ -136,6 +207,9 @@ locals {
     module.oidc_roles_075673041815.plan_role_arns,
     module.oidc_roles_844347863910.plan_role_arns,
     module.oidc_roles_520519513359.plan_role_arns,
+    {
+      "tf-github" = aws_iam_role.tf_github_plan.arn
+    }
   )
 }
 
