@@ -35,5 +35,11 @@ jobs:
       contents: read
       pull-requests: write
     uses: melvyndekort/gha-workflows/.github/workflows/terraform-pr-plan.yml@v1
+    # This repo manages IAM roles in every account, so its plan refreshes
+    # cross-account. The Terraform default is the admin role, which a read-only
+    # plan role is deliberately not allowed to assume, so point the providers at
+    # the plan role for the duration of the plan.
+    with:
+      tf-vars: TF_VAR_subaccount_role_name=github-actions-tf-github-plan
     secrets:
       plan-role-arn: ${{ secrets.AWS_PLAN_ROLE_ARN }}
