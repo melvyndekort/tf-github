@@ -33,3 +33,18 @@ variable "plan_job_workflow_refs" {
   type        = list(string)
   default     = []
 }
+
+variable "plan_kms_key_arns" {
+  description = <<-EOT
+    Map of repo name to the KMS key ARN its plan must decrypt, for repos whose
+    Terraform calls `data.aws_kms_secrets` at plan time. Opt-in: a repo only
+    appears here when it sets `pr_plan_kms_decrypt: true` in repositories.yaml.
+
+    Needed because the AWS-managed ReadOnlyAccess policy grants only
+    kms:Describe*/Get*/List*, not kms:Decrypt. Granting it in the plan role's
+    identity policy is enough for keys in the same account, because the key
+    policy already delegates to the account root.
+  EOT
+  type        = map(string)
+  default     = {}
+}

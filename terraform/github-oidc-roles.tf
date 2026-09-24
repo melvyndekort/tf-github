@@ -64,6 +64,22 @@ locals {
   plan_job_workflow_refs = [
     "melvyndekort/gha-workflows/.github/workflows/terraform-pr-plan.yml@*",
   ]
+
+  # KMS key that `data.aws_kms_secrets` decrypts at plan time. Same account as
+  # every repo that uses it, so an identity-policy grant suffices (the key policy
+  # already delegates to the account root).
+  generic_kms_key_arn = data.terraform_remote_state.tf_aws.outputs.generic_kms_key_arn
+
+  # Opt-in subset of plan_repos: repos whose plan must also decrypt secrets.
+  # ReadOnlyAccess covers kms:Describe*/Get*/List* but NOT kms:Decrypt.
+  plan_kms_key_arns_by_account = {
+    for account_id, repos in local.plan_repos_by_account :
+    account_id => {
+      for name, repo_id in repos :
+      name => local.generic_kms_key_arn
+      if try(local.repositories_config.repositories[name].pr_plan_kms_decrypt, false)
+    }
+  }
 }
 
 # One module instance per account
@@ -75,6 +91,7 @@ module "oidc_roles_075673041815" {
   repos                  = local.oidc_repos_by_account["075673041815"]
   plan_repos             = local.plan_repos_by_account["075673041815"]
   plan_job_workflow_refs = local.plan_job_workflow_refs
+  plan_kms_key_arns      = local.plan_kms_key_arns_by_account["075673041815"]
 }
 
 module "oidc_roles_844347863910" {
@@ -84,6 +101,7 @@ module "oidc_roles_844347863910" {
   repos                  = local.oidc_repos_by_account["844347863910"]
   plan_repos             = local.plan_repos_by_account["844347863910"]
   plan_job_workflow_refs = local.plan_job_workflow_refs
+  plan_kms_key_arns      = local.plan_kms_key_arns_by_account["844347863910"]
 
   providers = {
     aws = aws.account_844347863910
@@ -97,6 +115,7 @@ module "oidc_roles_520519513359" {
   repos                  = local.oidc_repos_by_account["520519513359"]
   plan_repos             = local.plan_repos_by_account["520519513359"]
   plan_job_workflow_refs = local.plan_job_workflow_refs
+  plan_kms_key_arns      = local.plan_kms_key_arns_by_account["520519513359"]
 
   providers = {
     aws = aws.account_520519513359
