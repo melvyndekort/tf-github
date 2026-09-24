@@ -4,6 +4,7 @@ global_collaborators:
 repositories:
   assets:
     type: public
+    allow_forking: false
     description: "This repository contains my static resources site"
     aws_account: "075673041815"
     shared_workflows: true
@@ -19,6 +20,7 @@ repositories:
 
   aws-ntfy-alerts:
     type: public
+    allow_forking: false
     description: "AWS alerting system that forwards SNS notifications to ntfy"
     aws_account: "075673041815"
     shared_workflows: true
@@ -30,6 +32,7 @@ repositories:
 
   cheatsheets:
     type: public
+    allow_forking: false
     description: "Documentation used in my custom Arch setup"
     aws_account: "075673041815"
     shared_workflows: true
@@ -64,14 +67,17 @@ repositories:
 
   dotfiles:
     type: public
+    allow_forking: false
     description: "This repository contains all the important dotfiles in my Linux home directory based on the chezmoi dotfile manager."
 
   secrets-sync:
     type: public
+    allow_forking: false
     description: "Container to sync and decrypt SOPS-encrypted secrets from Git"
 
   email-infra:
     type: public
+    allow_forking: false
     description: "Email infrastructure with DMARC collection and DNS management"
     aws_account: "075673041815"
     shared_workflows: true
@@ -92,6 +98,7 @@ repositories:
 
   "example.melvyn.dev":
     type: public
+    allow_forking: false
     description: "Example static website"
     aws_account: "075673041815"
     shared_workflows: true
@@ -112,6 +119,7 @@ repositories:
 
   ignition:
     type: public
+    allow_forking: false
     description: "This repository contains my ignition files for Fedora CoreOS"
     aws_account: "075673041815"
     allowed_actions_config: []
@@ -123,6 +131,7 @@ repositories:
 
   image-refresher:
     type: public
+    allow_forking: false
     description: "Docker container which updates specified docker images on the local system"
 
 
@@ -138,6 +147,7 @@ repositories:
 
   melvyn-dev:
     type: public
+    allow_forking: false
     description: "Public website"
     aws_account: "075673041815"
     shared_workflows: true
@@ -157,14 +167,17 @@ repositories:
 
   internal-dns-sync:
     type: public
+    allow_forking: false
     description: "Container image for syncing internal DNS entries to PiHole servers"
 
   router-events:
     type: public
+    allow_forking: false
     description: "Process events sent by a router"
 
   scheduler:
     type: public
+    allow_forking: false
     description: "Run scheduled jobs in Docker and trigger them manually via a web interface"
 
   startpage:
@@ -188,11 +201,13 @@ repositories:
 
   tf-aws:
     type: public
+    allow_forking: false
     description: "Manage centralized AWS resources using Terraform"
     aws_account: "075673041815"
 
   tf-cloudflare:
     type: public
+    allow_forking: false
     description: "Centrally manage cloudflare configuration"
     aws_account: "075673041815"
     shared_workflows: true
@@ -204,6 +219,7 @@ repositories:
 
   tf-grafana:
     type: public
+    allow_forking: false
     description: "Terraform configuration for managing Grafana Cloud infrastructure"
     aws_account: "075673041815"
     # KMS canary for the shared-workflow rollout: first repo whose plan calls
@@ -217,6 +233,7 @@ repositories:
 
   kids-monitor:
     type: public
+    allow_forking: false
     description: "Grafana Cloud dashboards for the kids' network activity"
     aws_account: "075673041815"
     shared_workflows: true
@@ -227,6 +244,7 @@ repositories:
 
   tf-github:
     type: public
+    allow_forking: false
     description: "Centrally manage github configuration"
     shared_workflows: true
     required_status_checks:
@@ -235,6 +253,7 @@ repositories:
 
   tf-backup:
     type: public
+    allow_forking: false
     description: "Terraform configuration for managing backup infrastructure"
     aws_account: "075673041815"
     shared_workflows: true
@@ -246,6 +265,7 @@ repositories:
 
   tf-cloudtrail:
     type: public
+    allow_forking: false
     description: "Terraform configuration for AWS CloudTrail setup"
     aws_account: "075673041815"
     shared_workflows: true
@@ -256,6 +276,7 @@ repositories:
 
   tf-cognito:
     type: public
+    allow_forking: false
     description: "Terraform configuration for AWS Cognito authentication"
     aws_account: "075673041815"
     shared_workflows: true
@@ -266,6 +287,7 @@ repositories:
 
   minecraft-server:
     type: public
+    allow_forking: false
     description: "A Minecraft server on AWS ECS"
     aws_account: "075673041815"
     shared_workflows: true
@@ -277,6 +299,7 @@ repositories:
 
   network-monitor:
     type: public
+    allow_forking: false
     description: "Serverless network device monitoring with event streaming"
     aws_account: "844347863910"
     # PoC for the shared-workflow pipeline. shared_workflows allow-lists the
@@ -313,4 +336,5 @@ repositories:
   # secrets and no AWS account of its own.
   gha-workflows:
     type: public
+    allow_forking: false
     description: "Shared reusable GitHub Actions workflows"
