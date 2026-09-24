@@ -187,6 +187,13 @@ repositories:
     type: public
     description: "Serverless network device monitoring with event streaming"
     aws_account: "844347863910"
+    # PoC for the shared-workflow pipeline. shared_workflows allow-lists the
+    # gha-workflows repo (GitHub's allowed-actions policy covers reusable
+    # workflows); pr_plan_role creates the read-only plan role and distributes
+    # AWS_PLAN_ROLE_ARN. required_status_checks is added in a follow-up, once
+    # the real check names have been observed on a run.
+    shared_workflows: true
+    pr_plan_role: true
 
   hermes-agent:
     type: private
