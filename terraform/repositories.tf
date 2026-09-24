@@ -223,7 +223,15 @@ resource "github_repository_collaborator" "global_collaborators" {
     for c in local.all_collaborators : "${c.repo}/${c.username}" => c
   }
 
-  repository = each.value.repo
+  # Reference the module output rather than the YAML name so Terraform knows
+  # the repository must exist first. With a literal name there is no dependency
+  # edge and the collaborator PUT races repo creation, failing with a 404 for
+  # every newly added repository.
+  repository = try(
+    module.public_repos[each.value.repo].repo_name,
+    module.private_repos[each.value.repo].repo_name,
+    github_repository.custom_repos[each.value.repo].name
+  )
   username   = each.value.username
   permission = "push"
 }
