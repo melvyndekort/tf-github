@@ -314,3 +314,5 @@ repositories:
   gha-workflows:
     type: public
     description: "Shared reusable GitHub Actions workflows"
+
+# Smoke test: first PR plan under the read-only plan role. Revert after.
