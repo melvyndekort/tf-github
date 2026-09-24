@@ -6,6 +6,11 @@ repositories:
     type: public
     description: "This repository contains my static resources site"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
     secrets:
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
@@ -16,11 +21,22 @@ repositories:
     type: public
     description: "AWS alerting system that forwards SNS notifications to ntfy"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    pr_plan_kms_decrypt: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
 
   cheatsheets:
     type: public
     description: "Documentation used in my custom Arch setup"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
     secrets:
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
@@ -31,6 +47,11 @@ repositories:
     type: private
     description: "Docker compose stack to run all lmserver software"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
     secrets:
       - name: CLOUDFLARE_CLIENT_ID
         value_ref: tf_cloudflare.github_actions_client_id
@@ -53,6 +74,12 @@ repositories:
     type: public
     description: "Email infrastructure with DMARC collection and DNS management"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    pr_plan_kms_decrypt: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
     secrets:
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
@@ -67,11 +94,21 @@ repositories:
     type: public
     description: "Example static website"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
 
   get-cookies:
     type: public
     description: "A serverless authentication solution which converts JWT tokens to AWS Cloudfront signed cookies"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
 
   ignition:
     type: public
@@ -103,6 +140,11 @@ repositories:
     type: public
     description: "Public website"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
     secrets:
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
@@ -129,6 +171,11 @@ repositories:
     type: private
     description: "Public website"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
     secrets:
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
@@ -148,6 +195,12 @@ repositories:
     type: public
     description: "Centrally manage cloudflare configuration"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    pr_plan_kms_decrypt: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
 
   tf-grafana:
     type: public
@@ -166,6 +219,11 @@ repositories:
     type: public
     description: "Grafana Cloud dashboards for the kids' network activity"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
 
   tf-github:
     type: public
@@ -175,21 +233,43 @@ repositories:
     type: public
     description: "Terraform configuration for managing backup infrastructure"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    pr_plan_kms_decrypt: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
 
   tf-cloudtrail:
     type: public
     description: "Terraform configuration for AWS CloudTrail setup"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
 
   tf-cognito:
     type: public
     description: "Terraform configuration for AWS Cognito authentication"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
 
   minecraft-server:
     type: public
     description: "A Minecraft server on AWS ECS"
     aws_account: "075673041815"
+    shared_workflows: true
+    pr_plan_role: true
+    pr_plan_kms_decrypt: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
 
   network-monitor:
     type: public
@@ -217,6 +297,11 @@ repositories:
     type: private
     description: "Self-hosted Hermes Agent on ECS Fargate Spot"
     aws_account: "520519513359"
+    shared_workflows: true
+    pr_plan_role: true
+    required_status_checks:
+      - "validate / validate"
+      - "plan / plan"
 
   # Shared reusable workflows. Public so that public caller repos can reference
   # it (a public repo may only call workflows from public repos). Holds no
