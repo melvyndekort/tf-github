@@ -33,7 +33,17 @@ data "aws_iam_policy_document" "assume" {
       values = [
         # Immutable-subject format (embeds owner_id/repo_id), GitHub's
         # current default for newly created repos.
+        #
+        # Both subjects are accepted during the `production` environment
+        # rollout. A job that declares `environment:` gets an
+        # `:environment:<name>` subject INSTEAD of `:ref:refs/heads/main` —
+        # they are mutually exclusive, so accepting only one would break
+        # every apply the moment the caller changes (or the moment it is
+        # reverted). Once all 19 callers declare the environment, the
+        # `:ref:refs/heads/main` entry is dropped and the environment
+        # becomes load-bearing: see §7.2 of the planning doc.
         "repo:${var.github_org}@${var.github_owner_id}/${each.key}@${each.value}:ref:refs/heads/main",
+        "repo:${var.github_org}@${var.github_owner_id}/${each.key}@${each.value}:environment:production",
       ]
     }
   }
