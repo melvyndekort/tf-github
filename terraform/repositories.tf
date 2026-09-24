@@ -235,3 +235,53 @@ resource "github_repository_collaborator" "global_collaborators" {
   username   = each.value.username
   permission = "push"
 }
+
+# ---------------------------------------------------------------------------
+# `production` environment on every repo that uses the shared workflows.
+#
+# This exists for the OIDC subject, not for a human gate. A job declaring
+# `environment: production` gets a `…:environment:production` subject instead
+# of `…:ref:refs/heads/main`, which lets the apply role's trust policy pin
+# deploys to the environment rather than to a branch name.
+#
+# The required-reviewer rule is deliberately NOT set: it is a paid feature on
+# private repos (`Failed to create the environment protection rule. Please
+# ensure the billing plan supports the required reviewers protection rule.`),
+# and 3 of these repos are private. A deployment branch policy works on both
+# visibilities on the free plan and gives the property that actually matters —
+# only `main` may deploy to this environment.
+# ---------------------------------------------------------------------------
+locals {
+  shared_workflow_repos = {
+    for name, config in local.repositories_config.repositories :
+    name => config
+    if try(config.shared_workflows, false)
+  }
+}
+
+resource "github_repository_environment" "production" {
+  for_each = local.shared_workflow_repos
+
+  environment = "production"
+
+  # Module output, not the YAML key: without the dependency edge this races
+  # repository creation, exactly as the collaborator resource above documents.
+  repository = try(
+    module.public_repos[each.key].repo_name,
+    module.private_repos[each.key].repo_name,
+  )
+
+  # Restrict to an explicit branch list, populated below with `main` only.
+  deployment_branch_policy {
+    protected_branches     = false
+    custom_branch_policies = true
+  }
+}
+
+resource "github_repository_environment_deployment_policy" "production_main" {
+  for_each = local.shared_workflow_repos
+
+  repository     = github_repository_environment.production[each.key].repository
+  environment    = github_repository_environment.production[each.key].environment
+  branch_pattern = "main"
+}
