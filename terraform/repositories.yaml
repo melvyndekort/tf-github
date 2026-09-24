@@ -299,6 +299,7 @@ repositories:
     aws_account: "520519513359"
     shared_workflows: true
     pr_plan_role: true
+    pr_plan_kms_decrypt: true
     required_status_checks:
       - "validate / validate"
       - "plan / plan"
