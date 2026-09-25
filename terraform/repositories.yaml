@@ -10,7 +10,6 @@ repositories:
     pr_plan_role: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
     secrets:
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
@@ -26,7 +25,6 @@ repositories:
     pr_plan_kms_decrypt: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
 
   cheatsheets:
     type: public
@@ -36,7 +34,6 @@ repositories:
     pr_plan_role: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
     secrets:
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
@@ -51,7 +48,6 @@ repositories:
     pr_plan_role: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
     secrets:
       - name: CLOUDFLARE_CLIENT_ID
         value_ref: tf_cloudflare.github_actions_client_id
@@ -79,7 +75,6 @@ repositories:
     pr_plan_kms_decrypt: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
     secrets:
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
@@ -98,7 +93,6 @@ repositories:
     pr_plan_role: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
 
   get-cookies:
     type: public
@@ -108,7 +102,6 @@ repositories:
     pr_plan_role: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
 
   ignition:
     type: public
@@ -144,7 +137,6 @@ repositories:
     pr_plan_role: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
     secrets:
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
@@ -175,7 +167,6 @@ repositories:
     pr_plan_role: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
     secrets:
       - name: CLOUDFLARE_ACCOUNT_ID
         value_ref: cloudflare_account_id
@@ -200,7 +191,6 @@ repositories:
     pr_plan_kms_decrypt: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
 
   tf-grafana:
     type: public
@@ -213,7 +203,6 @@ repositories:
     pr_plan_kms_decrypt: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
 
   kids-monitor:
     type: public
@@ -223,7 +212,6 @@ repositories:
     pr_plan_role: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
 
   tf-github:
     type: public
@@ -231,7 +219,6 @@ repositories:
     shared_workflows: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
 
   tf-backup:
     type: public
@@ -242,7 +229,6 @@ repositories:
     pr_plan_kms_decrypt: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
 
   tf-cloudtrail:
     type: public
@@ -252,7 +238,6 @@ repositories:
     pr_plan_role: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
 
   tf-cognito:
     type: public
@@ -262,7 +247,6 @@ repositories:
     pr_plan_role: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
 
   minecraft-server:
     type: public
@@ -273,7 +257,6 @@ repositories:
     pr_plan_kms_decrypt: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
 
   network-monitor:
     type: public
@@ -295,7 +278,6 @@ repositories:
     # and every PR is BLOCKED on a missing required check.
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
 
   hermes-agent:
     type: private
@@ -306,7 +288,6 @@ repositories:
     pr_plan_kms_decrypt: true
     required_status_checks:
       - "validate / validate"
-      - "plan / plan"
 
   # Shared reusable workflows. Public so that public caller repos can reference
   # it (a public repo may only call workflows from public repos). Holds no
