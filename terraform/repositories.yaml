@@ -1,316 +1,251 @@
 global_collaborators:
-  - mdekort-hermes
-
+- mdekort-hermes
 repositories:
   assets:
     type: public
-    description: "This repository contains my static resources site"
-    aws_account: "075673041815"
+    description: This repository contains my static resources site
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
+    - validate / validate
     secrets:
-      - name: CLOUDFLARE_ACCOUNT_ID
-        value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_assets
-
+    - name: CLOUDFLARE_ACCOUNT_ID
+      value_ref: cloudflare_account_id
+    - name: CLOUDFLARE_API_TOKEN
+      value_ref: tf_cloudflare.api_token_assets
   aws-ntfy-alerts:
     type: public
-    description: "AWS alerting system that forwards SNS notifications to ntfy"
-    aws_account: "075673041815"
+    description: AWS alerting system that forwards SNS notifications to ntfy
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     pr_plan_kms_decrypt: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
-
+    - validate / validate
   cheatsheets:
     type: public
-    description: "Documentation used in my custom Arch setup"
-    aws_account: "075673041815"
+    description: Documentation used in my custom Arch setup
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
+    - validate / validate
     secrets:
-      - name: CLOUDFLARE_ACCOUNT_ID
-        value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_cheatsheets
-
+    - name: CLOUDFLARE_ACCOUNT_ID
+      value_ref: cloudflare_account_id
+    - name: CLOUDFLARE_API_TOKEN
+      value_ref: tf_cloudflare.api_token_cheatsheets
   homelab:
     type: private
-    description: "Docker compose stack to run all lmserver software"
-    aws_account: "075673041815"
+    description: Docker compose stack to run all lmserver software
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
+    - validate / validate
     secrets:
-      - name: CLOUDFLARE_CLIENT_ID
-        value_ref: tf_cloudflare.github_actions_client_id
-      - name: CLOUDFLARE_CLIENT_SECRET
-        value_ref: tf_cloudflare.github_actions_client_secret
+    - name: CLOUDFLARE_CLIENT_ID
+      value_ref: tf_cloudflare.github_actions_client_id
+    - name: CLOUDFLARE_CLIENT_SECRET
+      value_ref: tf_cloudflare.github_actions_client_secret
     deploy_keys:
-      - title: secrets-sync
-        key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGg4ZosYsBzCrE5YfmsJh+DSozK8ilfF/Q8YNSB7h+GZ homelab-secrets-sync
-        read_only: true
-
+    - title: secrets-sync
+      key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGg4ZosYsBzCrE5YfmsJh+DSozK8ilfF/Q8YNSB7h+GZ
+        homelab-secrets-sync
+      read_only: true
   dotfiles:
     type: public
-    description: "This repository contains all the important dotfiles in my Linux home directory based on the chezmoi dotfile manager."
-
+    description: This repository contains all the important dotfiles in my Linux home
+      directory based on the chezmoi dotfile manager.
   secrets-sync:
     type: public
-    description: "Container to sync and decrypt SOPS-encrypted secrets from Git"
-
+    description: Container to sync and decrypt SOPS-encrypted secrets from Git
   email-infra:
     type: public
-    description: "Email infrastructure with DMARC collection and DNS management"
-    aws_account: "075673041815"
+    description: Email infrastructure with DMARC collection and DNS management
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     pr_plan_kms_decrypt: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
+    - validate / validate
     secrets:
-      - name: CLOUDFLARE_ACCOUNT_ID
-        value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_mta_sts
-
+    - name: CLOUDFLARE_ACCOUNT_ID
+      value_ref: cloudflare_account_id
+    - name: CLOUDFLARE_API_TOKEN
+      value_ref: tf_cloudflare.api_token_mta_sts
   dracula-hugo-theme:
     type: public
-    description: "My Dracula theme for Hugo static site generator"
-
-  "example.melvyn.dev":
+    description: My Dracula theme for Hugo static site generator
+  example.melvyn.dev:
     type: public
-    description: "Example static website"
-    aws_account: "075673041815"
+    description: Example static website
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
-
+    - validate / validate
   get-cookies:
     type: public
-    description: "A serverless authentication solution which converts JWT tokens to AWS Cloudfront signed cookies"
-    aws_account: "075673041815"
+    description: A serverless authentication solution which converts JWT tokens to
+      AWS Cloudfront signed cookies
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
-
+    - validate / validate
   ignition:
     type: public
-    description: "This repository contains my ignition files for Fedora CoreOS"
-    aws_account: "075673041815"
+    description: This repository contains my ignition files for Fedora CoreOS
+    aws_account: 075673041815
     allowed_actions_config: []
     secrets:
-      - name: CLOUDFLARE_ACCOUNT_ID
-        value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_ignition
-
+    - name: CLOUDFLARE_ACCOUNT_ID
+      value_ref: cloudflare_account_id
+    - name: CLOUDFLARE_API_TOKEN
+      value_ref: tf_cloudflare.api_token_ignition
   image-refresher:
     type: public
-    description: "Docker container which updates specified docker images on the local system"
-
-
-
-  "melvyndekort.github.io":
+    description: Docker container which updates specified docker images on the local
+      system
+  melvyndekort.github.io:
     type: custom
-    description: "My personal blog"
+    description: My personal blog
     visibility: public
     has_issues: false
     pages:
       branch: gh-pages
     default_branch: gh-pages
-
   melvyn-dev:
     type: public
-    description: "Public website"
-    aws_account: "075673041815"
+    description: Public website
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
+    - validate / validate
     secrets:
-      - name: CLOUDFLARE_ACCOUNT_ID
-        value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_melvyn_dev
-
+    - name: CLOUDFLARE_ACCOUNT_ID
+      value_ref: cloudflare_account_id
+    - name: CLOUDFLARE_API_TOKEN
+      value_ref: tf_cloudflare.api_token_melvyn_dev
   password-store:
     type: private
-    description: "Password management should be simple and follow Unix philosophy"
-
+    description: Password management should be simple and follow Unix philosophy
   internal-dns-sync:
     type: public
-    description: "Container image for syncing internal DNS entries to PiHole servers"
-
+    description: Container image for syncing internal DNS entries to PiHole servers
   router-events:
     type: public
-    description: "Process events sent by a router"
-
+    description: Process events sent by a router
   scheduler:
     type: public
-    description: "Run scheduled jobs in Docker and trigger them manually via a web interface"
-
+    description: Run scheduled jobs in Docker and trigger them manually via a web
+      interface
   startpage:
     type: private
-    description: "Public website"
-    aws_account: "075673041815"
+    description: Public website
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
+    - validate / validate
     secrets:
-      - name: CLOUDFLARE_ACCOUNT_ID
-        value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_startpage
-
+    - name: CLOUDFLARE_ACCOUNT_ID
+      value_ref: cloudflare_account_id
+    - name: CLOUDFLARE_API_TOKEN
+      value_ref: tf_cloudflare.api_token_startpage
   systemsetup:
     type: private
-    description: "My custom system setup using Ansible"
-
+    description: My custom system setup using Ansible
   tf-aws:
     type: public
-    description: "Manage centralized AWS resources using Terraform"
-    aws_account: "075673041815"
-
+    description: Manage centralized AWS resources using Terraform
+    aws_account: 075673041815
   tf-cloudflare:
     type: public
-    description: "Centrally manage cloudflare configuration"
-    aws_account: "075673041815"
+    description: Centrally manage cloudflare configuration
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     pr_plan_kms_decrypt: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
-
+    - validate / validate
   tf-grafana:
     type: public
-    description: "Terraform configuration for managing Grafana Cloud infrastructure"
-    aws_account: "075673041815"
-    # KMS canary for the shared-workflow rollout: first repo whose plan calls
-    # `data.aws_kms_secrets`, so it needs kms:Decrypt on top of ReadOnlyAccess.
+    description: Terraform configuration for managing Grafana Cloud infrastructure
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     pr_plan_kms_decrypt: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
-
+    - validate / validate
   kids-monitor:
     type: public
-    description: "Grafana Cloud dashboards for the kids' network activity"
-    aws_account: "075673041815"
+    description: Grafana Cloud dashboards for the kids' network activity
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
-
+    - validate / validate
   tf-github:
     type: public
-    description: "Centrally manage github configuration"
+    description: Centrally manage github configuration
     shared_workflows: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
-
+    - validate / validate
   tf-backup:
     type: public
-    description: "Terraform configuration for managing backup infrastructure"
-    aws_account: "075673041815"
+    description: Terraform configuration for managing backup infrastructure
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     pr_plan_kms_decrypt: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
-
+    - validate / validate
   tf-cloudtrail:
     type: public
-    description: "Terraform configuration for AWS CloudTrail setup"
-    aws_account: "075673041815"
+    description: Terraform configuration for AWS CloudTrail setup
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
-
+    - validate / validate
   tf-cognito:
     type: public
-    description: "Terraform configuration for AWS Cognito authentication"
-    aws_account: "075673041815"
+    description: Terraform configuration for AWS Cognito authentication
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
-
+    - validate / validate
   minecraft-server:
     type: public
-    description: "A Minecraft server on AWS ECS"
-    aws_account: "075673041815"
+    description: A Minecraft server on AWS ECS
+    aws_account: 075673041815
     shared_workflows: true
     pr_plan_role: true
     pr_plan_kms_decrypt: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
-
+    - validate / validate
   network-monitor:
     type: public
-    description: "Serverless network device monitoring with event streaming"
-    aws_account: "844347863910"
-    # PoC for the shared-workflow pipeline. shared_workflows allow-lists the
-    # gha-workflows repo (GitHub's allowed-actions policy covers reusable
-    # workflows); pr_plan_role creates the read-only plan role and distributes
-    # AWS_PLAN_ROLE_ARN.
+    description: Serverless network device monitoring with event streaming
+    aws_account: '844347863910'
     shared_workflows: true
     pr_plan_role: true
-    # Check names as GitHub reports them for a called reusable workflow:
-    # "<caller job> / <called job>". Observed on run 35944377013.
-    #
-    # Prerequisite, verified by experiment: the fork guard must stay at job
-    # level INSIDE the reusable workflow. A required check reporting `skipped`
-    # counts as satisfied (merge stays CLEAN), but moving the guard to the
-    # caller renames the check to plain "plan", so "plan / plan" never reports
-    # and every PR is BLOCKED on a missing required check.
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
-
+    - validate / validate
   hermes-agent:
     type: private
-    description: "Self-hosted Hermes Agent on ECS Fargate Spot"
-    aws_account: "520519513359"
+    description: Self-hosted Hermes Agent on ECS Fargate Spot
+    aws_account: '520519513359'
     shared_workflows: true
     pr_plan_role: true
     pr_plan_kms_decrypt: true
     required_status_checks:
-      - "validate / validate"
-      - "plan / plan"
-
-  # Shared reusable workflows. Public so that public caller repos can reference
-  # it (a public repo may only call workflows from public repos). Holds no
-  # secrets and no AWS account of its own.
+    - validate / validate
   gha-workflows:
     type: public
-    description: "Shared reusable GitHub Actions workflows"
+    description: Shared reusable GitHub Actions workflows
