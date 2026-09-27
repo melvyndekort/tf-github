@@ -45,10 +45,12 @@ resource "time_sleep" "vulnerability_alerts_propagation" {
 }
 
 resource "github_repository_dependabot_security_updates" "repo" {
+  count = var.archived ? 0 : 1
+
   repository = github_repository.repo.id
   enabled    = true
 
-  depends_on = [time_sleep.vulnerability_alerts_propagation]
+  depends_on = [time_sleep.vulnerability_alerts_propagation, github_repository_vulnerability_alerts.repo]
 }
 
 resource "github_issue_label" "requires-manual-qa" {
