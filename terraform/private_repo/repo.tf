@@ -10,12 +10,18 @@ resource "github_repository" "repo" {
 
   auto_init              = true
   delete_branch_on_merge = true
-  vulnerability_alerts   = true
   archive_on_destroy     = true
   allow_forking          = var.allow_forking
   archived               = var.archived
 
   allow_update_branch = true
+}
+
+resource "github_repository_vulnerability_alerts" "repo" {
+  count = var.archived ? 0 : 1
+
+  repository = github_repository.repo.name
+  enabled    = true
 }
 
 resource "github_actions_repository_permissions" "repo" {

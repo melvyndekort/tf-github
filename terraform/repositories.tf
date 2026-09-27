@@ -107,7 +107,6 @@ resource "github_repository" "custom_repos" {
   auto_init              = true
   allow_auto_merge       = true
   delete_branch_on_merge = true
-  vulnerability_alerts   = true
   archive_on_destroy     = true
 
   dynamic "pages" {
@@ -118,6 +117,13 @@ resource "github_repository" "custom_repos" {
       }
     }
   }
+}
+
+resource "github_repository_vulnerability_alerts" "custom_repos" {
+  for_each = local.custom_repos
+
+  repository = github_repository.custom_repos[each.key].name
+  enabled    = true
 }
 
 # GitHub Actions permissions for custom repositories
