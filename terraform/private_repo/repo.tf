@@ -13,6 +13,7 @@ resource "github_repository" "repo" {
   vulnerability_alerts   = true
   archive_on_destroy     = true
   allow_forking          = var.allow_forking
+  archived               = var.archived
 
   allow_update_branch = true
 }

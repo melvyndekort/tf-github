@@ -161,17 +161,8 @@ repositories:
 
   startpage:
     type: private
-    description: "Public website"
-    aws_account: "075673041815"
-    shared_workflows: true
-    pr_plan_role: true
-    required_status_checks:
-      - "validate / validate"
-    secrets:
-      - name: CLOUDFLARE_ACCOUNT_ID
-        value_ref: cloudflare_account_id
-      - name: CLOUDFLARE_API_TOKEN
-        value_ref: tf_cloudflare.api_token_startpage
+    description: "Decommissioned - replaced by Linkding"
+    archived: true
 
   systemsetup:
     type: private

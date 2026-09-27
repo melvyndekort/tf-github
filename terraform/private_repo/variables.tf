@@ -25,3 +25,9 @@ variable "allow_forking" {
   type        = bool
   default     = true
 }
+
+variable "archived" {
+  description = "Whether the repository is archived (read-only). GitHub rejects most write operations against an archived repo, so this should only ever go true -> a repo entering this state stops receiving collaborator/permission/secret updates from this module."
+  type        = bool
+  default     = false
+}
