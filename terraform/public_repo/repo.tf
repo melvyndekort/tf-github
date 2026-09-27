@@ -11,11 +11,15 @@ resource "github_repository" "repo" {
   auto_init              = true
   allow_auto_merge       = true
   delete_branch_on_merge = true
-  vulnerability_alerts   = true
   archive_on_destroy     = true
   allow_forking          = var.allow_forking
 
   allow_update_branch = true
+}
+
+resource "github_repository_vulnerability_alerts" "repo" {
+  repository = github_repository.repo.name
+  enabled    = true
 }
 
 resource "github_actions_repository_permissions" "repo" {
