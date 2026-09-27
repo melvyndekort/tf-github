@@ -89,6 +89,7 @@ module "private_repos" {
   deploy_keys            = try(each.value.deploy_keys, [])
   allowed_actions_config = local.allowed_actions_by_repo[each.key]
   allow_forking          = try(each.value.allow_forking, true)
+  archived               = try(each.value.archived, false)
 }
 
 # Custom repositories (like melvyndekort.github.io)
