@@ -118,6 +118,10 @@ repositories:
     type: public
     description: "Docker container which updates specified docker images on the local system"
 
+  ecs-dns-updater:
+    type: public
+    description: "Updates Cloudflare A/AAAA records to an ECS service's own public IP on startup"
+
 
 
   "melvyndekort.github.io":
