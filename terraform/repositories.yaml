@@ -111,7 +111,7 @@ repositories:
     # history) to declare `environment: production`, so this flag is
     # defense-in-depth only: it narrows the AdministratorAccess OIDC role's
     # trust to the environment subject even though nothing currently assumes
-    # it that way. See melvyndekort/tf-github#35.
+    # it that way. See melvyndekort/tf-github#36.
     production_environment: true
     allowed_actions_config: []
     secrets:
