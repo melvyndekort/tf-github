@@ -23,6 +23,12 @@ data "aws_iam_role" "tf_github_plan_role" {
 # plan role's IAM policy only permits assuming github-actions-tf-github-plan.
 # Verified with simulate-principal-policy: the admin role and AdminRole both
 # return implicitDeny. Authorisation is IAM's job, not this variable's.
+variable "subaccount_role_path" {
+  description = "IAM path of the cross-account role: /external/ for the OIDC roles, / for the generic ReadOnlyRole used by the drift check"
+  type        = string
+  default     = "/external/"
+}
+
 variable "subaccount_role_name" {
   description = "Cross-account role to assume: the admin role for applies, the read-only plan role for PR plans"
   type        = string
@@ -34,7 +40,7 @@ provider "aws" {
   region = "eu-west-1"
 
   assume_role {
-    role_arn = "arn:aws:iam::844347863910:role/external/${var.subaccount_role_name}"
+    role_arn = "arn:aws:iam::844347863910:role${var.subaccount_role_path}${var.subaccount_role_name}"
   }
 }
 
@@ -43,7 +49,7 @@ provider "aws" {
   region = "eu-west-1"
 
   assume_role {
-    role_arn = "arn:aws:iam::520519513359:role/external/${var.subaccount_role_name}"
+    role_arn = "arn:aws:iam::520519513359:role${var.subaccount_role_path}${var.subaccount_role_name}"
   }
 }
 
