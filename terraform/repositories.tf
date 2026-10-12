@@ -259,10 +259,15 @@ resource "github_repository_collaborator" "global_collaborators" {
 # only `main` may deploy to this environment.
 # ---------------------------------------------------------------------------
 locals {
+  # Every repo whose apply role trusts only the `:environment:production`
+  # subject needs the environment to exist. That is the shared-workflow repos,
+  # plus any repo with its own workflow that opts in via
+  # `production_environment: true` (tf-aws: its bootstrap/root-module deploy
+  # cannot use the shared workflows).
   shared_workflow_repos = {
     for name, config in local.repositories_config.repositories :
     name => config
-    if try(config.shared_workflows, false)
+    if try(config.shared_workflows, false) || try(config.production_environment, false)
   }
 }
 
