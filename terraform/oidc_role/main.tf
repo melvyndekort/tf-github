@@ -140,9 +140,9 @@ resource "aws_iam_role_policy_attachment" "plan_readonly" {
 # `allowed` for it. Every KMS-using repo lives in the key's own account, so this
 # path covers all of them.
 #
-# Decrypt is scoped to the one key, and only for repos that opt in with
-# `pr_plan_kms_decrypt: true`. It does not widen what the role can mutate: the
-# role stays read-only, and the plan already reads these same secrets during an
+# Decrypt is scoped to the one key and to the repo's own encryption-context
+# `target`, and only for repos that opt in with `pr_plan_kms_target`. It does
+# not widen what the role can mutate: the role stays read-only, and the plan already reads these same secrets during an
 # apply. It does mean a PR plan can read that repo's decrypted secrets -- which
 # is why the trust policy pins `job_workflow_ref` to the shared plan workflow,
 # so PR-authored code never holds the credential.
@@ -154,6 +154,12 @@ data "aws_iam_policy_document" "plan_kms_decrypt" {
     effect    = "Allow"
     actions   = ["kms:Decrypt"]
     resources = [each.value]
+
+    condition {
+      test     = "StringEquals"
+      variable = "kms:EncryptionContext:target"
+      values   = [var.plan_kms_targets[each.key]]
+    }
   }
 }
 

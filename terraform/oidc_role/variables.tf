@@ -34,11 +34,22 @@ variable "plan_job_workflow_refs" {
   default     = []
 }
 
+variable "plan_kms_targets" {
+  description = <<-EOT
+    Map of repo name to the `kms:EncryptionContext:target` value its plan may
+    decrypt. Must have exactly the keys of `plan_kms_key_arns`; the decrypt grant
+    is conditioned on it so a plan role cannot decrypt another repo's secret on
+    the same key.
+  EOT
+  type        = map(string)
+  default     = {}
+}
+
 variable "plan_kms_key_arns" {
   description = <<-EOT
     Map of repo name to the KMS key ARN its plan must decrypt, for repos whose
     Terraform calls `data.aws_kms_secrets` at plan time. Opt-in: a repo only
-    appears here when it sets `pr_plan_kms_decrypt: true` in repositories.yaml.
+    appears here when it sets `pr_plan_kms_target` in repositories.yaml.
 
     Needed because the AWS-managed ReadOnlyAccess policy grants only
     kms:Describe*/Get*/List*, not kms:Decrypt. Granting it in the plan role's
