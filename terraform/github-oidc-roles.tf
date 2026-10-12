@@ -106,7 +106,21 @@ locals {
     account_id => {
       for name, repo_id in repos :
       name => local.generic_kms_key_arn
-      if try(local.repositories_config.repositories[name].pr_plan_kms_decrypt, false)
+      if try(local.repositories_config.repositories[name].pr_plan_kms_target, null) != null
+    }
+  }
+
+  # The `target` encryption-context value each opted-in repo may decrypt, from
+  # `pr_plan_kms_target` in repositories.yaml. It must equal the `target` in the
+  # repo's own secrets.tf (not always the repo name: minecraft-server uses
+  # `tf-minecraft`). Without this condition a plan role could decrypt any
+  # other repo's ciphertext on the same key.
+  plan_kms_targets_by_account = {
+    for account_id, repos in local.plan_repos_by_account :
+    account_id => {
+      for name, repo_id in repos :
+      name => local.repositories_config.repositories[name].pr_plan_kms_target
+      if try(local.repositories_config.repositories[name].pr_plan_kms_target, null) != null
     }
   }
 }
@@ -121,6 +135,7 @@ module "oidc_roles_075673041815" {
   plan_repos             = local.plan_repos_by_account["075673041815"]
   plan_job_workflow_refs = local.plan_job_workflow_refs
   plan_kms_key_arns      = local.plan_kms_key_arns_by_account["075673041815"]
+  plan_kms_targets       = local.plan_kms_targets_by_account["075673041815"]
 }
 
 module "oidc_roles_844347863910" {
@@ -131,6 +146,7 @@ module "oidc_roles_844347863910" {
   plan_repos             = local.plan_repos_by_account["844347863910"]
   plan_job_workflow_refs = local.plan_job_workflow_refs
   plan_kms_key_arns      = local.plan_kms_key_arns_by_account["844347863910"]
+  plan_kms_targets       = local.plan_kms_targets_by_account["844347863910"]
 
   providers = {
     aws = aws.account_844347863910
@@ -145,6 +161,7 @@ module "oidc_roles_520519513359" {
   plan_repos             = local.plan_repos_by_account["520519513359"]
   plan_job_workflow_refs = local.plan_job_workflow_refs
   plan_kms_key_arns      = local.plan_kms_key_arns_by_account["520519513359"]
+  plan_kms_targets       = local.plan_kms_targets_by_account["520519513359"]
 
   providers = {
     aws = aws.account_520519513359
