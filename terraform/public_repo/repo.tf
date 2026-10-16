@@ -34,6 +34,14 @@ resource "github_actions_repository_permissions" "repo" {
   }
 }
 
+# Lets the dependabot auto-approve workflow approve PRs; without it the
+# review required by branch protection never arrives and auto-merge stalls.
+resource "github_workflow_repository_permissions" "repo" {
+  repository = github_repository.repo.name
+
+  can_approve_pull_request_reviews = true
+}
+
 resource "time_sleep" "vulnerability_alerts_propagation" {
   create_duration = "30s"
 
