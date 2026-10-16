@@ -148,6 +148,7 @@ resource "github_workflow_repository_permissions" "custom_repos" {
 
   repository = github_repository.custom_repos[each.key].name
 
+  default_workflow_permissions     = "read"
   can_approve_pull_request_reviews = true
 }
 

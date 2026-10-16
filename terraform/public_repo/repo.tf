@@ -39,6 +39,7 @@ resource "github_actions_repository_permissions" "repo" {
 resource "github_workflow_repository_permissions" "repo" {
   repository = github_repository.repo.name
 
+  default_workflow_permissions     = "read"
   can_approve_pull_request_reviews = true
 }
 
