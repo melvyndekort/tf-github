@@ -141,6 +141,16 @@ resource "github_actions_repository_permissions" "custom_repos" {
   }
 }
 
+# Lets the dependabot auto-approve workflow approve PRs; without it the
+# review required by branch protection never arrives and auto-merge stalls.
+resource "github_workflow_repository_permissions" "custom_repos" {
+  for_each = local.custom_repos
+
+  repository = github_repository.custom_repos[each.key].name
+
+  can_approve_pull_request_reviews = true
+}
+
 # Handle default branch for custom repos with pages
 data "github_branch" "custom_repo_branches" {
   for_each = {
