@@ -22,7 +22,7 @@ repositories:
     aws_account: "075673041815"
     shared_workflows: true
     pr_plan_role: true
-    pr_plan_kms_decrypt: true
+    pr_plan_kms_target: aws-ntfy-alerts
     required_status_checks:
       - "validate / validate"
 
@@ -72,7 +72,7 @@ repositories:
     aws_account: "075673041815"
     shared_workflows: true
     pr_plan_role: true
-    pr_plan_kms_decrypt: true
+    pr_plan_kms_target: email-infra
     required_status_checks:
       - "validate / validate"
     secrets:
@@ -190,7 +190,7 @@ repositories:
     aws_account: "075673041815"
     shared_workflows: true
     pr_plan_role: true
-    pr_plan_kms_decrypt: true
+    pr_plan_kms_target: tf-cloudflare
     required_status_checks:
       - "validate / validate"
 
@@ -202,7 +202,7 @@ repositories:
     # `data.aws_kms_secrets`, so it needs kms:Decrypt on top of ReadOnlyAccess.
     shared_workflows: true
     pr_plan_role: true
-    pr_plan_kms_decrypt: true
+    pr_plan_kms_target: tf-grafana
     required_status_checks:
       - "validate / validate"
 
@@ -228,7 +228,7 @@ repositories:
     aws_account: "075673041815"
     shared_workflows: true
     pr_plan_role: true
-    pr_plan_kms_decrypt: true
+    pr_plan_kms_target: tf-backup
     required_status_checks:
       - "validate / validate"
 
@@ -256,7 +256,7 @@ repositories:
     aws_account: "075673041815"
     shared_workflows: true
     pr_plan_role: true
-    pr_plan_kms_decrypt: true
+    pr_plan_kms_target: tf-minecraft
     required_status_checks:
       - "validate / validate"
 
@@ -287,7 +287,7 @@ repositories:
     aws_account: "520519513359"
     shared_workflows: true
     pr_plan_role: true
-    pr_plan_kms_decrypt: true
+    pr_plan_kms_target: hermes-agent
     required_status_checks:
       - "validate / validate"
 
