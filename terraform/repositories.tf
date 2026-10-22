@@ -77,6 +77,7 @@ module "public_repos" {
   required_status_checks = try(each.value.required_status_checks, [])
   required_review_count  = try(each.value.required_review_count, null)
   allow_forking          = try(each.value.allow_forking, true)
+  require_pull_request   = try(each.value.require_pull_request, true)
 }
 
 # Private repositories using the module

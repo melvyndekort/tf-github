@@ -38,6 +38,22 @@ variable "required_review_count" {
   default     = null
 }
 
+variable "require_pull_request" {
+  description = <<-EOT
+    Whether main requires a pull request (with review + the configured
+    status checks) before it accepts changes. true (the default) is the
+    normal, permanent posture for every repo. Set false ONLY as a temporary,
+    explicitly-tracked measure (e.g. a migration that needs many small direct
+    commits to main) — it drops both the required-review and required-status-
+    check blocks from branch protection, so main accepts direct pushes with
+    no review and no CI gate. Flip back to true (or remove the override) as
+    soon as the migration window closes; do not leave a repo running with
+    this false.
+  EOT
+  type        = bool
+  default     = true
+}
+
 variable "allow_forking" {
   description = <<-EOT
     Whether the repository may be forked. GitHub does not allow disabling forks

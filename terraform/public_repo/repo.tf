@@ -78,15 +78,27 @@ resource "github_branch_protection" "main" {
   require_signed_commits          = true
   allows_deletions                = false
 
-  required_status_checks {
-    strict   = false
-    contexts = var.required_status_checks
+  # `require_pull_request` (default true) gates both of the blocks below.
+  # Set to false per-repo (require_pull_request: false in repositories.yaml)
+  # to let main accept direct pushes with no PR and no required status
+  # checks, for the duration of a declared migration window only — see the
+  # comment next to the repo's repositories.yaml entry for the owning task
+  # and the rollback task that must flip it back to true.
+  dynamic "required_status_checks" {
+    for_each = var.require_pull_request ? [1] : []
+    content {
+      strict   = false
+      contexts = var.required_status_checks
+    }
   }
 
-  required_pull_request_reviews {
-    dismiss_stale_reviews           = true
-    require_last_push_approval      = true
-    required_approving_review_count = var.required_review_count
+  dynamic "required_pull_request_reviews" {
+    for_each = var.require_pull_request ? [1] : []
+    content {
+      dismiss_stale_reviews           = true
+      require_last_push_approval      = true
+      required_approving_review_count = var.required_review_count
+    }
   }
 
   force_push_bypassers = var.force_push_bypassers
