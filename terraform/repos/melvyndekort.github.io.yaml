@@ -1,0 +1,7 @@
+type: custom
+description: "My personal blog"
+visibility: public
+has_issues: false
+pages:
+  branch: gh-pages
+default_branch: gh-pages

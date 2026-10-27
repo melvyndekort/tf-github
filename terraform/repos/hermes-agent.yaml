@@ -1,0 +1,12 @@
+type: private
+description: "Self-hosted Hermes Agent on ECS Fargate Spot"
+aws_account: "520519513359"
+shared_workflows: true
+pr_plan_role: true
+pr_plan_kms_target: hermes-agent
+required_status_checks:
+  - "validate / validate"
+
+  # Shared reusable workflows. Public so that public caller repos can reference
+  # it (a public repo may only call workflows from public repos). Holds no
+  # secrets and no AWS account of its own.

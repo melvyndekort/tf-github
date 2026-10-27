@@ -1,0 +1,4 @@
+type: public
+description: "Manage centralized AWS resources using Terraform"
+aws_account: "075673041815"
+production_environment: true

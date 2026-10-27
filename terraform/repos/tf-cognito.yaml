@@ -1,0 +1,7 @@
+type: public
+description: "Terraform configuration for AWS Cognito authentication"
+aws_account: "075673041815"
+shared_workflows: true
+pr_plan_role: true
+required_status_checks:
+  - "validate / validate"
