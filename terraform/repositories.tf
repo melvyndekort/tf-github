@@ -76,34 +76,199 @@ locals {
       }
     ]
   ])
+
+  # Union of public_repos and private_repos (same keys and values as
+  # before - custom_repos is still excluded). Feeds the single unified
+  # module below (tf-github-redesign-plan-2026-10.md §8 Phase 2 task 2).
+  public_and_private_repos = merge(local.public_repos, local.private_repos)
 }
 
-# Public repositories using the module
-module "public_repos" {
-  for_each = local.public_repos
-  source   = "./public_repo"
+# modules/public_repo and modules/private_repo merged into one
+# (./repo) - every repo's state must land at the SAME real-world
+# resource, not a destroy+recreate, hence the moved blocks below. One
+# per repo, not two whole-module moves: Terraform rejects "module.repo
+# moved from module.public_repos" AND "...from module.private_repos" in
+# the same configuration ("Ambiguous move statements... Each module call
+# can have moved from only one source call"), even though the two
+# source modules' key sets are disjoint - that disjointness isn't
+# something the static check considers. Resource-shape changes inside
+# the merged module itself (e.g. a resource that gained a count it
+# didn't have before) have their own moved blocks inside ./repo/repo.tf.
+moved {
+  from = module.public_repos["assets"]
+  to   = module.repo["assets"]
+}
+
+moved {
+  from = module.public_repos["aws-ntfy-alerts"]
+  to   = module.repo["aws-ntfy-alerts"]
+}
+
+moved {
+  from = module.public_repos["cheatsheets"]
+  to   = module.repo["cheatsheets"]
+}
+
+moved {
+  from = module.public_repos["dotfiles"]
+  to   = module.repo["dotfiles"]
+}
+
+moved {
+  from = module.public_repos["dracula-hugo-theme"]
+  to   = module.repo["dracula-hugo-theme"]
+}
+
+moved {
+  from = module.public_repos["ecs-dns-updater"]
+  to   = module.repo["ecs-dns-updater"]
+}
+
+moved {
+  from = module.public_repos["email-infra"]
+  to   = module.repo["email-infra"]
+}
+
+moved {
+  from = module.public_repos["example.melvyn.dev"]
+  to   = module.repo["example.melvyn.dev"]
+}
+
+moved {
+  from = module.public_repos["get-cookies"]
+  to   = module.repo["get-cookies"]
+}
+
+moved {
+  from = module.public_repos["gha-workflows"]
+  to   = module.repo["gha-workflows"]
+}
+
+moved {
+  from = module.public_repos["ignition"]
+  to   = module.repo["ignition"]
+}
+
+moved {
+  from = module.public_repos["image-refresher"]
+  to   = module.repo["image-refresher"]
+}
+
+moved {
+  from = module.public_repos["internal-dns-sync"]
+  to   = module.repo["internal-dns-sync"]
+}
+
+moved {
+  from = module.public_repos["kids-monitor"]
+  to   = module.repo["kids-monitor"]
+}
+
+moved {
+  from = module.public_repos["melvyn-dev"]
+  to   = module.repo["melvyn-dev"]
+}
+
+moved {
+  from = module.public_repos["minecraft-server"]
+  to   = module.repo["minecraft-server"]
+}
+
+moved {
+  from = module.public_repos["network-monitor"]
+  to   = module.repo["network-monitor"]
+}
+
+moved {
+  from = module.public_repos["router-events"]
+  to   = module.repo["router-events"]
+}
+
+moved {
+  from = module.public_repos["scheduler"]
+  to   = module.repo["scheduler"]
+}
+
+moved {
+  from = module.public_repos["secrets-sync"]
+  to   = module.repo["secrets-sync"]
+}
+
+moved {
+  from = module.public_repos["tf-aws"]
+  to   = module.repo["tf-aws"]
+}
+
+moved {
+  from = module.public_repos["tf-backup"]
+  to   = module.repo["tf-backup"]
+}
+
+moved {
+  from = module.public_repos["tf-cloudflare"]
+  to   = module.repo["tf-cloudflare"]
+}
+
+moved {
+  from = module.public_repos["tf-cloudtrail"]
+  to   = module.repo["tf-cloudtrail"]
+}
+
+moved {
+  from = module.public_repos["tf-cognito"]
+  to   = module.repo["tf-cognito"]
+}
+
+moved {
+  from = module.public_repos["tf-github"]
+  to   = module.repo["tf-github"]
+}
+
+moved {
+  from = module.public_repos["tf-grafana"]
+  to   = module.repo["tf-grafana"]
+}
+
+moved {
+  from = module.private_repos["hermes-agent"]
+  to   = module.repo["hermes-agent"]
+}
+
+moved {
+  from = module.private_repos["homelab"]
+  to   = module.repo["homelab"]
+}
+
+moved {
+  from = module.private_repos["password-store"]
+  to   = module.repo["password-store"]
+}
+
+moved {
+  from = module.private_repos["startpage"]
+  to   = module.repo["startpage"]
+}
+
+moved {
+  from = module.private_repos["systemsetup"]
+  to   = module.repo["systemsetup"]
+}
+
+module "repo" {
+  for_each = local.public_and_private_repos
+  source   = "./repo"
 
   name                   = each.key
   description            = each.value.description
+  visibility             = each.value.type
   force_push_bypassers   = [data.github_user.melvyn.node_id]
   allowed_actions_config = local.allowed_actions_by_repo[each.key]
   required_status_checks = try(each.value.required_status_checks, [])
   required_review_count  = try(each.value.required_review_count, null)
   allow_forking          = try(each.value.allow_forking, true)
   require_pull_request   = try(each.value.require_pull_request, true)
-}
-
-# Private repositories using the module
-module "private_repos" {
-  for_each = local.private_repos
-  source   = "./private_repo"
-
-  name                   = each.key
-  description            = each.value.description
-  deploy_keys            = try(each.value.deploy_keys, [])
-  allowed_actions_config = local.allowed_actions_by_repo[each.key]
-  allow_forking          = try(each.value.allow_forking, true)
   archived               = try(each.value.archived, false)
+  deploy_keys            = try(each.value.deploy_keys, [])
 }
 
 # Custom repositories (like melvyndekort.github.io)
@@ -195,8 +360,7 @@ resource "github_actions_secret" "repo_secrets" {
   }
 
   repository = try(
-    module.public_repos[each.value.repo_name].repo_name,
-    module.private_repos[each.value.repo_name].repo_name,
+    module.repo[each.value.repo_name].repo_name,
     github_repository.custom_repos[each.value.repo_name].name
   )
   secret_name = each.value.secret_name
@@ -224,8 +388,7 @@ resource "github_actions_secret" "oidc_role_arn" {
   }
 
   repository = try(
-    module.public_repos[each.key].repo_name,
-    module.private_repos[each.key].repo_name,
+    module.repo[each.key].repo_name,
     github_repository.custom_repos[each.key].name
   )
   secret_name     = "AWS_ROLE_ARN"
@@ -241,8 +404,7 @@ resource "github_actions_secret" "oidc_plan_role_arn" {
   }
 
   repository = try(
-    module.public_repos[each.key].repo_name,
-    module.private_repos[each.key].repo_name,
+    module.repo[each.key].repo_name,
     github_repository.custom_repos[each.key].name
   )
   secret_name     = "AWS_PLAN_ROLE_ARN"
@@ -260,8 +422,7 @@ resource "github_repository_collaborator" "global_collaborators" {
   # edge and the collaborator PUT races repo creation, failing with a 404 for
   # every newly added repository.
   repository = try(
-    module.public_repos[each.value.repo].repo_name,
-    module.private_repos[each.value.repo].repo_name,
+    module.repo[each.value.repo].repo_name,
     github_repository.custom_repos[each.value.repo].name
   )
   username   = each.value.username
@@ -304,8 +465,7 @@ resource "github_repository_environment" "production" {
   # Module output, not the YAML key: without the dependency edge this races
   # repository creation, exactly as the collaborator resource above documents.
   repository = try(
-    module.public_repos[each.key].repo_name,
-    module.private_repos[each.key].repo_name,
+    module.repo[each.key].repo_name,
   )
 
   # Restrict to an explicit branch list, populated below with `main` only.
