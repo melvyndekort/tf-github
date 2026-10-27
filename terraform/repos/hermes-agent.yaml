@@ -6,7 +6,3 @@ pr_plan_role: true
 pr_plan_kms_target: hermes-agent
 required_status_checks:
   - "validate / validate"
-
-  # Shared reusable workflows. Public so that public caller repos can reference
-  # it (a public repo may only call workflows from public repos). Holds no
-  # secrets and no AWS account of its own.
