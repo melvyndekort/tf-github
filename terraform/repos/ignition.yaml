@@ -1,0 +1,15 @@
+type: public
+description: "This repository contains my ignition files for Fedora CoreOS"
+aws_account: "075673041815"
+# No GitHub Actions workflow exists in this repo (confirmed via full git
+# history) to declare `environment: production`, so this flag is
+# defense-in-depth only: it narrows the AdministratorAccess OIDC role's
+# trust to the environment subject even though nothing currently assumes
+# it that way. See melvyndekort/tf-github#36.
+production_environment: true
+allowed_actions_config: []
+secrets:
+  - name: CLOUDFLARE_ACCOUNT_ID
+    value_ref: cloudflare_account_id
+  - name: CLOUDFLARE_API_TOKEN
+    value_ref: tf_cloudflare.api_token_ignition

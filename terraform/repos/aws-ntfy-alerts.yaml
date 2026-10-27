@@ -1,0 +1,8 @@
+type: public
+description: "AWS alerting system that forwards SNS notifications to ntfy"
+aws_account: "075673041815"
+shared_workflows: true
+pr_plan_role: true
+pr_plan_kms_target: aws-ntfy-alerts
+required_status_checks:
+  - "validate / validate"

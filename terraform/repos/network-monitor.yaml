@@ -1,0 +1,19 @@
+type: public
+description: "Serverless network device monitoring with event streaming"
+aws_account: "844347863910"
+# PoC for the shared-workflow pipeline. shared_workflows allow-lists the
+# gha-workflows repo (GitHub's allowed-actions policy covers reusable
+# workflows); pr_plan_role creates the read-only plan role and distributes
+# AWS_PLAN_ROLE_ARN.
+shared_workflows: true
+pr_plan_role: true
+# Check names as GitHub reports them for a called reusable workflow:
+# "<caller job> / <called job>". Observed on run 35944377013.
+#
+# Prerequisite, verified by experiment: the fork guard must stay at job
+# level INSIDE the reusable workflow. A required check reporting `skipped`
+# counts as satisfied (merge stays CLEAN), but moving the guard to the
+# caller renames the check to plain "plan", so "plan / plan" never reports
+# and every PR is BLOCKED on a missing required check.
+required_status_checks:
+  - "validate / validate"

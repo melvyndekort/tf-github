@@ -1,0 +1,5 @@
+# Shared reusable workflows. Public so that public caller repos can reference
+# it (a public repo may only call workflows from public repos). Holds no
+# secrets and no AWS account of its own.
+type: public
+description: "Shared reusable GitHub Actions workflows"

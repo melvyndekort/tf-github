@@ -1,5 +1,18 @@
 locals {
-  repositories_config = yamldecode(file("${path.module}/repositories.yaml"))
+  # One YAML file per repository (terraform/repos/<name>.yaml), replacing the
+  # single terraform/repositories.yaml. The map key (filename stem) is the
+  # repo name, same as the old top-level map key, so every downstream local
+  # and resource address below is unchanged - this is purely a config-loading
+  # change (tf-github-redesign-plan-2026-10.md §8 Phase 2 task 1/3).
+  repo_yaml_files = fileset("${path.module}/repos", "*.yaml")
+
+  repositories_config = {
+    global_collaborators = yamldecode(file("${path.module}/global.yaml")).global_collaborators
+    repositories = {
+      for f in local.repo_yaml_files :
+      trimsuffix(f, ".yaml") => yamldecode(file("${path.module}/repos/${f}"))
+    }
+  }
 
   # Create normalized repo names for Terraform resources (replace periods and hyphens with underscores)
   repo_names = {

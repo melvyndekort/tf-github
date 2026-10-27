@@ -1,0 +1,2 @@
+type: public
+description: "Docker container which updates specified docker images on the local system"
