@@ -1,7 +1,6 @@
 visibility: public
 description: "A serverless authentication solution which converts JWT tokens to AWS Cloudfront signed cookies"
 aws_account: "075673041815"
-aws_apply_full_admin: true  # TEMPORARY - escape hatch during PowerUserAccess rollout (tf-github-redesign-plan-2026-10.md §4.2a). Flip to false once this repo has applied successfully under the scoped policy.
 shared_workflows: true
 aws_plan_role: true
 required_status_checks:

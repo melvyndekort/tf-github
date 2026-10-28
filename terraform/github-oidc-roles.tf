@@ -87,23 +87,6 @@ locals {
     }
   }
 
-  # Escape-hatch subset (tf-github-redesign-plan-2026-10.md §4.2a): repos
-  # whose apply role keeps AdministratorAccess instead of the
-  # PowerUserAccess + boundary + guardrail default. Opt-in via
-  # `aws_apply_full_admin: true` in the repo's repos/<name>.yaml. Every
-  # repo currently has this set true as a zero-diff starting point for the
-  # rollout; flipping individual repos to false (or removing the field,
-  # which defaults to false) is the actual migration, one repo at a time
-  # with a real apply verified before the next.
-  full_admin_repos_by_account = {
-    for account_id, repos in local.oidc_repos_by_account :
-    account_id => {
-      for name, repo_id in repos :
-      name => repo_id
-      if try(local.repositories_config.repositories[name].aws_apply_full_admin, false)
-    }
-  }
-
   # The reusable workflows allowed to assume any PR plan role. Pinned to a tag
   # in the shared workflow repo; bumping the tag is a deliberate change here.
   plan_job_workflow_refs = [
@@ -148,7 +131,6 @@ module "oidc_roles_075673041815" {
   github_org             = local.github_org
   github_owner_id        = local.github_owner_id
   repos                  = local.oidc_repos_by_account["075673041815"]
-  full_admin_repos       = local.full_admin_repos_by_account["075673041815"]
   plan_repos             = local.plan_repos_by_account["075673041815"]
   plan_job_workflow_refs = local.plan_job_workflow_refs
   plan_kms_key_arns      = local.plan_kms_key_arns_by_account["075673041815"]
@@ -160,7 +142,6 @@ module "oidc_roles_844347863910" {
   github_org             = local.github_org
   github_owner_id        = local.github_owner_id
   repos                  = local.oidc_repos_by_account["844347863910"]
-  full_admin_repos       = local.full_admin_repos_by_account["844347863910"]
   plan_repos             = local.plan_repos_by_account["844347863910"]
   plan_job_workflow_refs = local.plan_job_workflow_refs
   plan_kms_key_arns      = local.plan_kms_key_arns_by_account["844347863910"]
@@ -176,7 +157,6 @@ module "oidc_roles_520519513359" {
   github_org             = local.github_org
   github_owner_id        = local.github_owner_id
   repos                  = local.oidc_repos_by_account["520519513359"]
-  full_admin_repos       = local.full_admin_repos_by_account["520519513359"]
   plan_repos             = local.plan_repos_by_account["520519513359"]
   plan_job_workflow_refs = local.plan_job_workflow_refs
   plan_kms_key_arns      = local.plan_kms_key_arns_by_account["520519513359"]
