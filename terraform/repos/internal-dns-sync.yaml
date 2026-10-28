@@ -1,2 +1,2 @@
-type: public
+visibility: public
 description: "Container image for syncing internal DNS entries to PiHole servers"

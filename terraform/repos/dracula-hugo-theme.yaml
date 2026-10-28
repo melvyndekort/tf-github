@@ -1,2 +1,2 @@
-type: public
+visibility: public
 description: "My Dracula theme for Hugo static site generator"

@@ -20,15 +20,19 @@ locals {
     name => replace(replace(name, ".", "_"), "-", "_")
   }
 
-  # Separate repos by type
+  # Separate repos by visibility. The melvyndekort.github.io "custom" repo
+  # also carries a `visibility: public` field (used directly by its own
+  # github_repository resource below), so these filters exclude anything
+  # with `type: custom` explicitly - otherwise it would double up into
+  # both public_repos and custom_repos.
   public_repos = {
     for name, config in local.repositories_config.repositories :
-    name => config if config.type == "public"
+    name => config if config.visibility == "public" && try(config.type, null) != "custom"
   }
 
   private_repos = {
     for name, config in local.repositories_config.repositories :
-    name => config if config.type == "private"
+    name => config if config.visibility == "private" && try(config.type, null) != "custom"
   }
 
   # Collaborators to add to all repos
@@ -46,7 +50,7 @@ locals {
 
   custom_repos = {
     for name, config in local.repositories_config.repositories :
-    name => config if config.type == "custom"
+    name => config if try(config.type, null) == "custom"
   }
 
   # Reusable workflows live in a shared repo, and GitHub's allowed-actions
@@ -260,7 +264,7 @@ module "repo" {
 
   name                   = each.key
   description            = each.value.description
-  visibility             = each.value.type
+  visibility             = each.value.visibility
   force_push_bypassers   = [data.github_user.melvyn.node_id]
   allowed_actions_config = local.allowed_actions_by_repo[each.key]
   required_status_checks = try(each.value.required_status_checks, [])
