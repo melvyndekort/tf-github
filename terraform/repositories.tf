@@ -1,9 +1,4 @@
 locals {
-  # One YAML file per repository (terraform/repos/<name>.yaml), replacing the
-  # single terraform/repositories.yaml. The map key (filename stem) is the
-  # repo name, same as the old top-level map key, so every downstream local
-  # and resource address below is unchanged - this is purely a config-loading
-  # change (tf-github-redesign-plan-2026-10.md §8 Phase 2 task 1/3).
   repo_yaml_files = fileset("${path.module}/repos", "*.yaml")
 
   repositories_config = {
@@ -20,11 +15,6 @@ locals {
     name => replace(replace(name, ".", "_"), "-", "_")
   }
 
-  # Separate repos by visibility. The melvyndekort.github.io "custom" repo
-  # also carries a `visibility: public` field (used directly by its own
-  # github_repository resource below), so these filters exclude anything
-  # with `type: custom` explicitly - otherwise it would double up into
-  # both public_repos and custom_repos.
   public_repos = {
     for name, config in local.repositories_config.repositories :
     name => config if config.visibility == "public" && try(config.type, null) != "custom"
@@ -81,23 +71,9 @@ locals {
     ]
   ])
 
-  # Union of public_repos and private_repos (same keys and values as
-  # before - custom_repos is still excluded). Feeds the single unified
-  # module below (tf-github-redesign-plan-2026-10.md §8 Phase 2 task 2).
   public_and_private_repos = merge(local.public_repos, local.private_repos)
 }
 
-# modules/public_repo and modules/private_repo merged into one
-# (./repo) - every repo's state must land at the SAME real-world
-# resource, not a destroy+recreate, hence the moved blocks below. One
-# per repo, not two whole-module moves: Terraform rejects "module.repo
-# moved from module.public_repos" AND "...from module.private_repos" in
-# the same configuration ("Ambiguous move statements... Each module call
-# can have moved from only one source call"), even though the two
-# source modules' key sets are disjoint - that disjointness isn't
-# something the static check considers. Resource-shape changes inside
-# the merged module itself (e.g. a resource that gained a count it
-# didn't have before) have their own moved blocks inside ./repo/repo.tf.
 moved {
   from = module.public_repos["assets"]
   to   = module.repo["assets"]
