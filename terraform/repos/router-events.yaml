@@ -1,2 +1,2 @@
-type: public
+visibility: public
 description: "Process events sent by a router"

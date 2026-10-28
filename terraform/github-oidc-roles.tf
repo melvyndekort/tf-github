@@ -76,14 +76,14 @@ locals {
   }
 
   # Opt-in subset: repos that additionally get a read-only PR plan role.
-  # A repo appears here only with `pr_plan_role: true` in repositories.yaml,
-  # so every other repo's plan stays unchanged.
+  # A repo appears here only with `aws_plan_role: true` in its
+  # repos/<name>.yaml, so every other repo's plan stays unchanged.
   plan_repos_by_account = {
     for account_id, repos in local.oidc_repos_by_account :
     account_id => {
       for name, repo_id in repos :
       name => repo_id
-      if try(local.repositories_config.repositories[name].pr_plan_role, false)
+      if try(local.repositories_config.repositories[name].aws_plan_role, false)
     }
   }
 
@@ -105,21 +105,21 @@ locals {
     account_id => {
       for name, repo_id in repos :
       name => local.generic_kms_key_arn
-      if try(local.repositories_config.repositories[name].pr_plan_kms_target, null) != null
+      if try(local.repositories_config.repositories[name].aws_plan_kms_target, null) != null
     }
   }
 
   # The `target` encryption-context value each opted-in repo may decrypt, from
-  # `pr_plan_kms_target` in repositories.yaml. It must equal the `target` in the
-  # repo's own secrets.tf (not always the repo name: minecraft-server uses
-  # `tf-minecraft`). Without this condition a plan role could decrypt any
+  # `aws_plan_kms_target` in its repos/<name>.yaml. It must equal the `target`
+  # in the repo's own secrets.tf (not always the repo name: minecraft-server
+  # uses `tf-minecraft`). Without this condition a plan role could decrypt any
   # other repo's ciphertext on the same key.
   plan_kms_targets_by_account = {
     for account_id, repos in local.plan_repos_by_account :
     account_id => {
       for name, repo_id in repos :
-      name => local.repositories_config.repositories[name].pr_plan_kms_target
-      if try(local.repositories_config.repositories[name].pr_plan_kms_target, null) != null
+      name => local.repositories_config.repositories[name].aws_plan_kms_target
+      if try(local.repositories_config.repositories[name].aws_plan_kms_target, null) != null
     }
   }
 }

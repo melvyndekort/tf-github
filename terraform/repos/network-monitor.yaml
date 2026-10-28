@@ -1,4 +1,4 @@
-type: public
+visibility: public
 description: "Serverless network device monitoring with event streaming"
 aws_account: "844347863910"
 # PoC for the shared-workflow pipeline. shared_workflows allow-lists the
@@ -6,7 +6,7 @@ aws_account: "844347863910"
 # workflows); pr_plan_role creates the read-only plan role and distributes
 # AWS_PLAN_ROLE_ARN.
 shared_workflows: true
-pr_plan_role: true
+aws_plan_role: true
 # Check names as GitHub reports them for a called reusable workflow:
 # "<caller job> / <called job>". Observed on run 35944377013.
 #

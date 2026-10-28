@@ -1,4 +1,4 @@
-type: public
+visibility: public
 description: "Centrally manage github configuration"
 shared_workflows: true
 required_status_checks:

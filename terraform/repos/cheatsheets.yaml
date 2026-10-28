@@ -1,8 +1,8 @@
-type: public
+visibility: public
 description: "Documentation used in my custom Arch setup"
 aws_account: "075673041815"
 shared_workflows: true
-pr_plan_role: true
+aws_plan_role: true
 required_status_checks:
   - "validate / validate"
 secrets:

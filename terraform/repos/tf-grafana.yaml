@@ -1,10 +1,10 @@
-type: public
+visibility: public
 description: "Terraform configuration for managing Grafana Cloud infrastructure"
 aws_account: "075673041815"
 # KMS canary for the shared-workflow rollout: first repo whose plan calls
 # `data.aws_kms_secrets`, so it needs kms:Decrypt on top of ReadOnlyAccess.
 shared_workflows: true
-pr_plan_role: true
-pr_plan_kms_target: tf-grafana
+aws_plan_role: true
+aws_plan_kms_target: tf-grafana
 required_status_checks:
   - "validate / validate"

@@ -1,4 +1,4 @@
-type: public
+visibility: public
 description: "This repository contains my ignition files for Fedora CoreOS"
 aws_account: "075673041815"
 # No GitHub Actions workflow exists in this repo (confirmed via full git
