@@ -1,4 +1,5 @@
 visibility: public
 description: "Manage centralized AWS resources using Terraform"
 aws_account: "075673041815"
+aws_apply_full_admin: true  # TEMPORARY - escape hatch during PowerUserAccess rollout (tf-github-redesign-plan-2026-10.md §4.2a). Flip to false once this repo has applied successfully under the scoped policy.
 production_environment: true

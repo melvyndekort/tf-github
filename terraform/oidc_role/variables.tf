@@ -11,6 +11,24 @@ variable "repos" {
   type        = map(number)
 }
 
+# tf-github-redesign-plan-2026-10.md §4.2a: escape-hatch subset of `repos`
+# whose apply role keeps AdministratorAccess instead of the
+# PowerUserAccess + boundary + guardrail default. Must be a subset of
+# `repos` (same repo_id values) - a repo either is or isn't in this map,
+# determining which policy its role gets.
+variable "full_admin_repos" {
+  description = <<-EOT
+    Subset of `repos` (same name => repo_id values) whose apply role keeps
+    full AdministratorAccess. Opt-in via `aws_apply_full_admin: true` in
+    the repo's repos/<name>.yaml. Every other repo in `repos` gets
+    PowerUserAccess + the TerraformGitHubBoundary-style boundary (pointed
+    directly at PowerUserAccess, no custom policy to keep in sync) +
+    a guardrail deny statement.
+  EOT
+  type        = map(number)
+  default     = {}
+}
+
 variable "plan_repos" {
   description = <<-EOT
     Map of repo name to its numeric GitHub repo_id for repos that get an
