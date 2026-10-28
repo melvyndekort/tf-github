@@ -47,16 +47,78 @@ data "aws_iam_policy_document" "assume" {
 resource "aws_iam_role" "github_actions" {
   for_each = var.repos
 
-  name               = "github-actions-${replace(each.key, ".", "-")}"
-  path               = "/external/"
-  assume_role_policy = data.aws_iam_policy_document.assume[each.key].json
+  name = "github-actions-${replace(each.key, ".", "-")}"
+  path = "/external/"
+  # tf-github-redesign-plan-2026-10.md §4.2a: scoped roles (every repo
+  # NOT in full_admin_repos) get PowerUserAccess as their boundary,
+  # pointed directly at the AWS-managed ARN - no custom policy document
+  # to author or keep in sync, so "what a created role can do" and "what
+  # the apply role itself can do" cap out at the same policy. Full-admin
+  # roles (the escape hatch) get no boundary.
+  permissions_boundary = contains(keys(var.full_admin_repos), each.key) ? null : "arn:aws:iam::aws:policy/PowerUserAccess"
+  assume_role_policy    = data.aws_iam_policy_document.assume[each.key].json
 }
 
 resource "aws_iam_role_policy_attachment" "admin" {
-  for_each = var.repos
+  for_each = var.full_admin_repos
 
   role       = aws_iam_role.github_actions[each.key].name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+# tf-github-redesign-plan-2026-10.md §4.2a: PowerUserAccess default for
+# every repo not in the full_admin_repos escape hatch.
+locals {
+  scoped_repos = {
+    for name, repo_id in var.repos : name => repo_id
+    if !contains(keys(var.full_admin_repos), name)
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "power_user" {
+  for_each = local.scoped_repos
+
+  role       = aws_iam_role.github_actions[each.key].name
+  policy_arn = "arn:aws:iam::aws:policy/PowerUserAccess"
+}
+
+# Guardrail deny (§4.2a): a blast-radius ceiling independent of the
+# boundary, covering what PowerUserAccess does not itself block -
+# org/account/billing operations and tampering with the OIDC trust this
+# whole design depends on. Applies only to scoped (non-full-admin) roles;
+# a full-admin role already has broader reach than this would deny
+# anyway, so attaching it there would be theatre.
+data "aws_iam_policy_document" "guardrail_deny" {
+  statement {
+    sid    = "NoOrgBillingOrAccountOps"
+    effect = "Deny"
+    actions = [
+      "organizations:*",
+      "account:*",
+      "aws-portal:*",
+      "iam:CreateUser",
+      "iam:CreateAccessKey",
+      "iam:AttachUserPolicy",
+      "iam:DeleteAccountPasswordPolicy",
+      "iam:UpdateAccountPasswordPolicy",
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid       = "NoTamperingWithOIDCTrust"
+    effect    = "Deny"
+    actions   = ["iam:DeleteOpenIDConnectProvider", "iam:UpdateOpenIDConnectProviderThumbprint", "cloudtrail:StopLogging", "cloudtrail:DeleteTrail"]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy" "guardrail_deny" {
+  for_each = local.scoped_repos
+
+  name   = "guardrail-deny"
+  role   = aws_iam_role.github_actions[each.key].name
+  policy = data.aws_iam_policy_document.guardrail_deny.json
 }
 
 # ---------------------------------------------------------------------------

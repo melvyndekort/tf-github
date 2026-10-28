@@ -1,6 +1,7 @@
 visibility: public
 description: "Terraform configuration for managing Grafana Cloud infrastructure"
 aws_account: "075673041815"
+aws_apply_full_admin: true  # TEMPORARY - escape hatch during PowerUserAccess rollout (tf-github-redesign-plan-2026-10.md §4.2a). Flip to false once this repo has applied successfully under the scoped policy.
 # KMS canary for the shared-workflow rollout: first repo whose plan calls
 # `data.aws_kms_secrets`, so it needs kms:Decrypt on top of ReadOnlyAccess.
 shared_workflows: true
