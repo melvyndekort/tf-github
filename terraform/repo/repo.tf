@@ -1,12 +1,3 @@
-# Unified repo module - merges the former modules/public_repo and
-# modules/private_repo into one (tf-github-redesign-plan-2026-10.md §8
-# Phase 2 task 2, §6.2). Resource-shape changes relative to the two
-# predecessor modules are called out with `moved` blocks below so every
-# existing repo's state maps onto the same real-world resource instead of
-# a destroy+recreate; see the module-call site (repositories.tf) for the
-# matching module.public_repos/module.private_repos -> module.repo moved
-# blocks that carry the per-repo state across the module merge itself.
-
 resource "github_repository" "repo" {
   name        = var.name
   description = var.description
@@ -27,11 +18,6 @@ resource "github_repository" "repo" {
   allow_update_branch = true
 }
 
-# Shape change only for repos that came from modules/public_repo: that
-# module created this with no count (a plain singleton), while
-# modules/private_repo already used `count = var.archived ? 0 : 1`. Unifying
-# on the private shape (needed to support archived public repos too) moves
-# every already-public repo's instance from the bare address to [0].
 moved {
   from = github_repository_vulnerability_alerts.repo
   to   = github_repository_vulnerability_alerts.repo[0]
@@ -58,9 +44,6 @@ resource "github_actions_repository_permissions" "repo" {
 
 # Lets the dependabot auto-approve workflow approve PRs; without it the
 # review required by branch protection never arrives and auto-merge stalls.
-#
-# Same shape change as github_repository_vulnerability_alerts.repo above,
-# same reason.
 moved {
   from = github_workflow_repository_permissions.repo
   to   = github_workflow_repository_permissions.repo[0]
@@ -83,11 +66,6 @@ resource "time_sleep" "vulnerability_alerts_propagation" {
   }
 }
 
-# Same shape change as github_repository_vulnerability_alerts.repo above,
-# same reason. depends_on carries both predecessor modules' dependency
-# edges (modules/private_repo additionally waited on the vulnerability
-# alerts resource; modules/public_repo did not) - depends_on is not a
-# tracked attribute, so taking the union changes nothing in state.
 moved {
   from = github_repository_dependabot_security_updates.repo
   to   = github_repository_dependabot_security_updates.repo[0]
@@ -113,10 +91,6 @@ data "github_branch" "main" {
   branch     = "main"
 }
 
-# Only modules/public_repo ever created this (as a plain singleton);
-# modules/private_repo had no branch_protection resource at all - no
-# private repo today has one live. Preserving that exactly: gated on
-# visibility instead of unconditional, so private repos still get none.
 moved {
   from = github_branch_protection.main
   to   = github_branch_protection.main[0]
