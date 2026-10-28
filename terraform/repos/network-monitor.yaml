@@ -1,6 +1,17 @@
 visibility: public
 description: "Serverless network device monitoring with event streaming"
 aws_account: "844347863910"
+# ROLLBACK (2026-10-28, canary failure): PowerUserAccess's NotAction
+# carve-out blocks essentially all iam:* actions, including read-only
+# iam:GetRole/iam:GetUser - this repo creates its own Lambda execution
+# roles (event_router, send_notifications, enrich_metadata, api_handler)
+# and an IAM user (vector) directly in Terraform, so its apply broke
+# immediately (network-monitor#158, run 40775961359). The plan's own
+# iam_scoped supplemental policy (§4.2a) assumed role names match
+# role/lambda-*, which none of this repo's roles do either - restoring
+# this escape hatch is not optional pending a real design fix, not a
+# quick patch.
+aws_apply_full_admin: true
 # PoC for the shared-workflow pipeline. shared_workflows allow-lists the
 # gha-workflows repo (GitHub's allowed-actions policy covers reusable
 # workflows); pr_plan_role creates the read-only plan role and distributes
