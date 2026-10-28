@@ -60,8 +60,7 @@ locals {
 
   # repo name => numeric repo_id, across all repo types
   repo_ids = merge(
-    { for k, m in module.public_repos : k => tonumber(m.repo_id) },
-    { for k, m in module.private_repos : k => tonumber(m.repo_id) },
+    { for k, m in module.repo : k => tonumber(m.repo_id) },
     { for k, r in github_repository.custom_repos : k => tonumber(r.repo_id) },
   )
 
