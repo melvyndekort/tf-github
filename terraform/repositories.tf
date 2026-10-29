@@ -173,6 +173,25 @@ resource "github_branch_default" "custom_repos" {
 }
 
 # GitHub Actions secrets
+locals {
+  # Every output of tf_cloudflare's remote state, auto-prefixed with
+  # `tf_cloudflare.` - a repo's secrets.yaml can reference any of them by
+  # name with no code change here when a new output is added there.
+  tf_cloudflare_secret_values = {
+    for k, v in data.terraform_remote_state.tf_cloudflare.outputs :
+    "tf_cloudflare.${k}" => v
+  }
+
+  # The handful of secrets sourced locally rather than from a remote state.
+  local_secret_values = {
+    docker_username       = local.docker_username
+    docker_password       = local.docker_password
+    cloudflare_account_id = local.cloudflare_account_id
+  }
+
+  secret_value_sources = merge(local.local_secret_values, local.tf_cloudflare_secret_values)
+}
+
 resource "github_actions_secret" "repo_secrets" {
   for_each = {
     for secret in local.all_secrets :
@@ -183,20 +202,8 @@ resource "github_actions_secret" "repo_secrets" {
     module.repo[each.value.repo_name].repo_name,
     github_repository.custom_repos[each.value.repo_name].name
   )
-  secret_name = each.value.secret_name
-  plaintext_value = lookup({
-    "docker_username"                            = local.docker_username
-    "docker_password"                            = local.docker_password
-    "cloudflare_account_id"                      = local.cloudflare_account_id
-    "tf_cloudflare.api_token_startpage"          = data.terraform_remote_state.tf_cloudflare.outputs.api_token_startpage
-    "tf_cloudflare.api_token_ignition"           = data.terraform_remote_state.tf_cloudflare.outputs.api_token_ignition
-    "tf_cloudflare.api_token_melvyn_dev"         = data.terraform_remote_state.tf_cloudflare.outputs.api_token_melvyn_dev
-    "tf_cloudflare.api_token_mta_sts"            = data.terraform_remote_state.tf_cloudflare.outputs.api_token_mta_sts
-    "tf_cloudflare.api_token_cheatsheets"        = data.terraform_remote_state.tf_cloudflare.outputs.api_token_cheatsheets
-    "tf_cloudflare.api_token_assets"             = data.terraform_remote_state.tf_cloudflare.outputs.api_token_assets
-    "tf_cloudflare.github_actions_client_id"     = data.terraform_remote_state.tf_cloudflare.outputs.github_actions_client_id
-    "tf_cloudflare.github_actions_client_secret" = data.terraform_remote_state.tf_cloudflare.outputs.github_actions_client_secret
-  }, each.value.value_ref, "")
+  secret_name     = each.value.secret_name
+  plaintext_value = lookup(local.secret_value_sources, each.value.value_ref, "")
 }
 
 # AWS_ROLE_ARN secrets - automatically created for all repos with an aws_account
