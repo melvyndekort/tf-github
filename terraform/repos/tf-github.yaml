@@ -3,13 +3,10 @@ description: "Centrally manage github configuration"
 shared_workflows: true
 required_status_checks:
   - "validate / validate"
-# TEMPORARY (tf-github-redesign-plan-2026-10 migration, task t_a7c5d08b):
-# main accepts direct pushes with no PR/review while this is false, so
-# the migration can land many small commits without a human reviewing
-# every one. Prior config (restore target): required_status_checks as
-# above, required_pull_request_reviews{dismiss_stale_reviews=true,
-# require_last_push_approval=true, required_approving_review_count=1},
-# require_conversation_resolution=true, require_signed_commits=true,
-# allows_deletions=false, enforce_admins=false. Rollback task: t_ca6b2a47
-# — it must remove this line (or set it true) once migration completes.
-require_pull_request: false
+# Restored 2026-10-29 (kanban t_7ccfb9f3 Phase 0.1): the
+# tf-github-redesign-plan-2026-10 migration (task t_a7c5d08b) has landed, so
+# the temporary direct-push window (required_pull_request: false, rollback
+# task t_ca6b2a47) is no longer needed. Branch protection on main is back to
+# the default (require_pull_request: true via terraform/repositories.tf),
+# giving required_status_checks + required_pull_request_reviews +
+# require_conversation_resolution + require_signed_commits + no deletions.
