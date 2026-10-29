@@ -1,8 +1,5 @@
 visibility: public
 description: "A Minecraft server on AWS ECS"
 aws_account: "075673041815"
-shared_workflows: true
-aws_plan_role: true
+profile: terraform-workload
 aws_plan_kms_target: tf-minecraft
-required_status_checks:
-  - "validate / validate"

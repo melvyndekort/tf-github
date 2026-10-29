@@ -11,17 +11,19 @@ variable "repos" {
   type        = map(number)
 }
 
-variable "plan_repos" {
+variable "aws_plan_role_repos" {
   description = <<-EOT
     Map of repo name to its numeric GitHub repo_id for repos that get an
     additional read-only role for PR plans. Opt-in: a repo only appears here
-    when it sets `pr_plan_role: true` in repositories.yaml.
+    when it sets `aws_plan_role: true` in its repos/<name>.yaml -- this is the
+    one term used for this concept everywhere in tf-github (config key,
+    Terraform variable, module output); see README.md#naming.
   EOT
   type        = map(number)
   default     = {}
 }
 
-variable "plan_job_workflow_refs" {
+variable "aws_plan_role_job_workflow_refs" {
   description = <<-EOT
     Allowed `job_workflow_ref` claim values for the PR plan role, as the
     reusable workflow path plus ref (e.g.
@@ -34,22 +36,22 @@ variable "plan_job_workflow_refs" {
   default     = []
 }
 
-variable "plan_kms_targets" {
+variable "aws_plan_role_kms_targets" {
   description = <<-EOT
     Map of repo name to the `kms:EncryptionContext:target` value its plan may
-    decrypt. Must have exactly the keys of `plan_kms_key_arns`; the decrypt grant
-    is conditioned on it so a plan role cannot decrypt another repo's secret on
-    the same key.
+    decrypt. Must have exactly the keys of `aws_plan_role_kms_key_arns`; the
+    decrypt grant is conditioned on it so a plan role cannot decrypt another
+    repo's secret on the same key.
   EOT
   type        = map(string)
   default     = {}
 }
 
-variable "plan_kms_key_arns" {
+variable "aws_plan_role_kms_key_arns" {
   description = <<-EOT
     Map of repo name to the KMS key ARN its plan must decrypt, for repos whose
     Terraform calls `data.aws_kms_secrets` at plan time. Opt-in: a repo only
-    appears here when it sets `pr_plan_kms_target` in repositories.yaml.
+    appears here when it sets `aws_plan_kms_target` in its repos/<name>.yaml.
 
     Needed because the AWS-managed ReadOnlyAccess policy grants only
     kms:Describe*/Get*/List*, not kms:Decrypt. Granting it in the plan role's
