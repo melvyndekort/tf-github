@@ -30,7 +30,14 @@ resource "github_repository_vulnerability_alerts" "repo" {
   enabled    = true
 }
 
+moved {
+  from = github_actions_repository_permissions.repo
+  to   = github_actions_repository_permissions.repo[0]
+}
+
 resource "github_actions_repository_permissions" "repo" {
+  count = var.archived ? 0 : 1
+
   repository = github_repository.repo.name
 
   allowed_actions = "selected"
