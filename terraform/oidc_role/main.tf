@@ -10,38 +10,24 @@ data "aws_iam_openid_connect_provider" "github" {
   url = "https://token.actions.githubusercontent.com"
 }
 
-data "aws_iam_policy_document" "assume" {
+# ---------------------------------------------------------------------------
+# Apply role (AdministratorAccess) per repo. Trust-policy shape shared with
+# tf-aws's account-bootstrap module (which bootstraps tf-github's own apply
+# role) via gha-workflows' oidc-github-trust-policy module -- see that
+# module's README for why it lives there. tf-github improvement plan Phase 2
+# item 1.
+# ---------------------------------------------------------------------------
+
+module "trust" {
+  source = "git::https://github.com/melvyndekort/gha-workflows.git//modules/oidc-github-trust-policy?ref=feat/oidc-trust-policy-module"
+
   for_each = var.repos
 
-  statement {
-    actions = ["sts:AssumeRoleWithWebIdentity"]
-
-    principals {
-      type        = "Federated"
-      identifiers = [data.aws_iam_openid_connect_provider.github.arn]
-    }
-
-    condition {
-      test     = "StringEquals"
-      variable = "token.actions.githubusercontent.com:aud"
-      values   = ["sts.amazonaws.com"]
-    }
-
-    condition {
-      test     = "StringEquals"
-      variable = "token.actions.githubusercontent.com:sub"
-      values = [
-        # Immutable-subject format (embeds owner_id/repo_id), GitHub's
-        # current default for newly created repos.
-        #
-        # Only the `:environment:production` subject is now accepted. This
-        # makes the production environment load-bearing: all applies must
-        # route through the environment gate. Completes §7.2 of the planning
-        # doc (step 4/4: drop the main-branch fallback).
-        "repo:${var.github_org}@${var.github_owner_id}/${each.key}@${each.value}:environment:production",
-      ]
-    }
-  }
+  oidc_provider_arn = data.aws_iam_openid_connect_provider.github.arn
+  github_org        = var.github_org
+  github_owner_id   = var.github_owner_id
+  repo_name         = each.key
+  repo_id           = each.value
 }
 
 resource "aws_iam_role" "github_actions" {
@@ -49,7 +35,7 @@ resource "aws_iam_role" "github_actions" {
 
   name               = "github-actions-${replace(each.key, ".", "-")}"
   path               = "/external/"
-  assume_role_policy = data.aws_iam_policy_document.assume[each.key].json
+  assume_role_policy = module.trust[each.key].apply_assume_role_policy_json
 }
 
 resource "aws_iam_role_policy_attachment" "admin" {
@@ -80,37 +66,19 @@ resource "aws_iam_role_policy_attachment" "admin" {
 # in plan output, so publishing the plan on a public repo stays safe.
 # ---------------------------------------------------------------------------
 
-data "aws_iam_policy_document" "assume_plan" {
+module "trust_plan" {
+  source = "git::https://github.com/melvyndekort/gha-workflows.git//modules/oidc-github-trust-policy?ref=feat/oidc-trust-policy-module"
+
   for_each = var.aws_plan_role_repos
 
-  statement {
-    actions = ["sts:AssumeRoleWithWebIdentity"]
-
-    principals {
-      type        = "Federated"
-      identifiers = [data.aws_iam_openid_connect_provider.github.arn]
-    }
-
-    condition {
-      test     = "StringEquals"
-      variable = "token.actions.githubusercontent.com:aud"
-      values   = ["sts.amazonaws.com"]
-    }
-
-    condition {
-      test     = "StringEquals"
-      variable = "token.actions.githubusercontent.com:sub"
-      values = [
-        "repo:${var.github_org}@${var.github_owner_id}/${each.key}@${each.value}:pull_request",
-      ]
-    }
-
-    condition {
-      test     = "StringLike"
-      variable = "token.actions.githubusercontent.com:job_workflow_ref"
-      values   = var.aws_plan_role_job_workflow_refs
-    }
-  }
+  oidc_provider_arn      = data.aws_iam_openid_connect_provider.github.arn
+  github_org             = var.github_org
+  github_owner_id        = var.github_owner_id
+  repo_name              = each.key
+  repo_id                = each.value
+  create_apply_document  = false
+  create_plan_document   = true
+  plan_job_workflow_refs = var.aws_plan_role_job_workflow_refs
 }
 
 resource "aws_iam_role" "github_actions_plan" {
@@ -119,7 +87,7 @@ resource "aws_iam_role" "github_actions_plan" {
   name               = "github-actions-${replace(each.key, ".", "-")}-plan"
   path               = "/external/"
   description        = "Read-only role for terraform plan on pull requests in ${var.github_org}/${each.key}"
-  assume_role_policy = data.aws_iam_policy_document.assume_plan[each.key].json
+  assume_role_policy = module.trust_plan[each.key].plan_assume_role_policy_json
 }
 
 resource "aws_iam_role_policy_attachment" "plan_readonly" {
