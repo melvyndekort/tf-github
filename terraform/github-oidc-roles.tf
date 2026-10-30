@@ -78,7 +78,7 @@ locals {
   # Opt-in subset: repos that additionally get a read-only PR plan role.
   # A repo appears here only with `aws_plan_role: true` in its
   # repos/<name>.yaml, so every other repo's plan stays unchanged.
-  plan_repos_by_account = {
+  aws_plan_role_repos_by_account = {
     for account_id, repos in local.oidc_repos_by_account :
     account_id => {
       for name, repo_id in repos :
@@ -89,7 +89,7 @@ locals {
 
   # The reusable workflows allowed to assume any PR plan role. Pinned to a tag
   # in the shared workflow repo; bumping the tag is a deliberate change here.
-  plan_job_workflow_refs = [
+  aws_plan_role_job_workflow_refs = [
     "melvyndekort/gha-workflows/.github/workflows/terraform-pr-plan.yml@*",
   ]
 
@@ -98,10 +98,10 @@ locals {
   # already delegates to the account root).
   generic_kms_key_arn = data.terraform_remote_state.tf_aws.outputs.generic_kms_key_arn
 
-  # Opt-in subset of plan_repos: repos whose plan must also decrypt secrets.
-  # ReadOnlyAccess covers kms:Describe*/Get*/List* but NOT kms:Decrypt.
-  plan_kms_key_arns_by_account = {
-    for account_id, repos in local.plan_repos_by_account :
+  # Opt-in subset of aws_plan_role_repos: repos whose plan must also decrypt
+  # secrets. ReadOnlyAccess covers kms:Describe*/Get*/List* but NOT kms:Decrypt.
+  aws_plan_role_kms_key_arns_by_account = {
+    for account_id, repos in local.aws_plan_role_repos_by_account :
     account_id => {
       for name, repo_id in repos :
       name => local.generic_kms_key_arn
@@ -114,8 +114,8 @@ locals {
   # in the repo's own secrets.tf (not always the repo name: minecraft-server
   # uses `tf-minecraft`). Without this condition a plan role could decrypt any
   # other repo's ciphertext on the same key.
-  plan_kms_targets_by_account = {
-    for account_id, repos in local.plan_repos_by_account :
+  aws_plan_role_kms_targets_by_account = {
+    for account_id, repos in local.aws_plan_role_repos_by_account :
     account_id => {
       for name, repo_id in repos :
       name => local.repositories_config.repositories[name].aws_plan_kms_target
@@ -127,25 +127,25 @@ locals {
 # One module instance per account
 
 module "oidc_roles_075673041815" {
-  source                 = "./oidc_role"
-  github_org             = local.github_org
-  github_owner_id        = local.github_owner_id
-  repos                  = local.oidc_repos_by_account["075673041815"]
-  plan_repos             = local.plan_repos_by_account["075673041815"]
-  plan_job_workflow_refs = local.plan_job_workflow_refs
-  plan_kms_key_arns      = local.plan_kms_key_arns_by_account["075673041815"]
-  plan_kms_targets       = local.plan_kms_targets_by_account["075673041815"]
+  source                          = "./oidc_role"
+  github_org                      = local.github_org
+  github_owner_id                 = local.github_owner_id
+  repos                           = local.oidc_repos_by_account["075673041815"]
+  aws_plan_role_repos             = local.aws_plan_role_repos_by_account["075673041815"]
+  aws_plan_role_job_workflow_refs = local.aws_plan_role_job_workflow_refs
+  aws_plan_role_kms_key_arns      = local.aws_plan_role_kms_key_arns_by_account["075673041815"]
+  aws_plan_role_kms_targets       = local.aws_plan_role_kms_targets_by_account["075673041815"]
 }
 
 module "oidc_roles_844347863910" {
-  source                 = "./oidc_role"
-  github_org             = local.github_org
-  github_owner_id        = local.github_owner_id
-  repos                  = local.oidc_repos_by_account["844347863910"]
-  plan_repos             = local.plan_repos_by_account["844347863910"]
-  plan_job_workflow_refs = local.plan_job_workflow_refs
-  plan_kms_key_arns      = local.plan_kms_key_arns_by_account["844347863910"]
-  plan_kms_targets       = local.plan_kms_targets_by_account["844347863910"]
+  source                          = "./oidc_role"
+  github_org                      = local.github_org
+  github_owner_id                 = local.github_owner_id
+  repos                           = local.oidc_repos_by_account["844347863910"]
+  aws_plan_role_repos             = local.aws_plan_role_repos_by_account["844347863910"]
+  aws_plan_role_job_workflow_refs = local.aws_plan_role_job_workflow_refs
+  aws_plan_role_kms_key_arns      = local.aws_plan_role_kms_key_arns_by_account["844347863910"]
+  aws_plan_role_kms_targets       = local.aws_plan_role_kms_targets_by_account["844347863910"]
 
   providers = {
     aws = aws.account_844347863910
@@ -153,14 +153,14 @@ module "oidc_roles_844347863910" {
 }
 
 module "oidc_roles_520519513359" {
-  source                 = "./oidc_role"
-  github_org             = local.github_org
-  github_owner_id        = local.github_owner_id
-  repos                  = local.oidc_repos_by_account["520519513359"]
-  plan_repos             = local.plan_repos_by_account["520519513359"]
-  plan_job_workflow_refs = local.plan_job_workflow_refs
-  plan_kms_key_arns      = local.plan_kms_key_arns_by_account["520519513359"]
-  plan_kms_targets       = local.plan_kms_targets_by_account["520519513359"]
+  source                          = "./oidc_role"
+  github_org                      = local.github_org
+  github_owner_id                 = local.github_owner_id
+  repos                           = local.oidc_repos_by_account["520519513359"]
+  aws_plan_role_repos             = local.aws_plan_role_repos_by_account["520519513359"]
+  aws_plan_role_job_workflow_refs = local.aws_plan_role_job_workflow_refs
+  aws_plan_role_kms_key_arns      = local.aws_plan_role_kms_key_arns_by_account["520519513359"]
+  aws_plan_role_kms_targets       = local.aws_plan_role_kms_targets_by_account["520519513359"]
 
   providers = {
     aws = aws.account_520519513359
@@ -177,10 +177,16 @@ locals {
     }
   )
 
-  all_plan_role_arns = merge(
-    module.oidc_roles_075673041815.plan_role_arns,
-    module.oidc_roles_844347863910.plan_role_arns,
-    module.oidc_roles_520519513359.plan_role_arns,
+  # Note on the "github_actions_plan_role_arns" output name below: this is a
+  # deliberately-kept exception to the aws_plan_role naming convention used
+  # everywhere else in this file -- it pairs with the sibling
+  # "github_actions_role_arns" output using the same github_actions_* prefix,
+  # which is its own small, internally-consistent naming scheme for this
+  # module's two public outputs. See README.md#naming.
+  all_aws_plan_role_arns = merge(
+    module.oidc_roles_075673041815.aws_plan_role_arns,
+    module.oidc_roles_844347863910.aws_plan_role_arns,
+    module.oidc_roles_520519513359.aws_plan_role_arns,
     {
       "tf-github" = data.aws_iam_role.tf_github_plan_role.arn
     }
@@ -192,5 +198,5 @@ output "github_actions_role_arns" {
 }
 
 output "github_actions_plan_role_arns" {
-  value = local.all_plan_role_arns
+  value = local.all_aws_plan_role_arns
 }

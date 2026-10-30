@@ -25,6 +25,89 @@ jobs:
       contents: read
     uses: melvyndekort/gha-workflows/.github/workflows/terraform-pr-validate.yml@v1
 
+  # Schema-validate the repos/*.yaml config-as-code surface (Phase 1 item 1,
+  # tf-github improvement plan 2026-10-29). Credential-free: pure YAML/JSON
+  # Schema check, no OIDC token requested, runs for fork PRs and Dependabot
+  # same as `validate` above. A misspelled key (e.g. `aws_acount`) now fails
+  # the PR instead of silently defaulting away via try(..., default).
+  schema-validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install schema validator deps
+        run: pip install -r terraform/requirements-ci.txt
+
+      - name: Validate repos/*.yaml against repos.schema.json
+        run: python3 terraform/validate_repos_schema.py
+
+  # Promote gha-workflows/tools/audit_plan_leaks.py from a manual script to a
+  # standing CI gate (Phase 1 item 3). Credential-free: `terraform providers
+  # schema -json` only needs provider plugins, not real backend state or AWS
+  # credentials, so the S3 backend is overridden with a throwaway local one
+  # for this job only (no network calls, no secrets requested).
+  plan-leak-audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - name: Checkout tf-github
+        uses: actions/checkout@v7
+
+      # Pinned to the same tag the reusable workflows below use, so a bump
+      # here is a deliberate, reviewed change like any other @v1 bump.
+      - name: Checkout gha-workflows (for the audit script)
+        uses: actions/checkout@v7
+        with:
+          repository: melvyndekort/gha-workflows
+          ref: v1
+          path: gha-workflows
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: latest
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Override backend (credential-free schema extraction only)
+        run: |
+          cat > zz_backend_override.tf <<'EOF'
+          terraform {
+            backend "local" {
+              path = "schema-audit.tfstate"
+            }
+          }
+          EOF
+
+      - name: Terraform init (local backend, no AWS credentials)
+        run: terraform init -reconfigure -input=false
+
+      - name: Extract provider schemas
+        run: |
+          mkdir -p ../schemas
+          terraform providers schema -json > ../schemas/providers.json
+
+      - name: Run audit_plan_leaks.py
+        run: |
+          python3 ../gha-workflows/tools/audit_plan_leaks.py \
+            --schemas ../schemas \
+            --repos .
+
   plan:
     needs: validate
     permissions:

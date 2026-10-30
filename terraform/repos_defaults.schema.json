@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "tf-github repo profile defaults (repos/_defaults.yaml)",
+  "description": "Shape of the defaults/profile layer. Each named profile may set any subset of the repoFields defined in repos.schema.json (no required keys here -- a profile is a partial default, not a complete repo config).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profiles"],
+  "properties": {
+    "profiles": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "repos.schema.json#/$defs/repoFields"
+      }
+    }
+  }
+}

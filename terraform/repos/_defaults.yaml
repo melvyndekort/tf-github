@@ -1,0 +1,22 @@
+# Defaults/profile layer for repos/*.yaml (Phase 1 item 2 of the tf-github
+# improvement plan, 2026-10-29). Not a repo itself -- excluded from the
+# `repos/*.yaml` glob in repositories.tf by name, and validated against
+# repos_defaults.schema.json instead of repos.schema.json.
+#
+# A repo opts in with `profile: <name>` in its own repos/<repo>.yaml. The
+# named profile's keys are merged in as defaults; any key the repo also sets
+# explicitly overrides the profile's value (shallow merge: a repo that sets
+# `required_status_checks` replaces the whole list, it does not append to
+# the profile's list).
+#
+# Add a new profile here when a new repeated shape emerges across 3+ repos;
+# keep repos.schema.json's `profile` enum in sync with the keys below.
+profiles:
+  # The shape shared by every "plan role opted in, applies via the shared
+  # CI workflows" Terraform workload repo: 17 of the 33 repos/*.yaml files
+  # repeated exactly these three lines before this layer existed.
+  terraform-workload:
+    shared_workflows: true
+    aws_plan_role: true
+    required_status_checks:
+      - "validate / validate"

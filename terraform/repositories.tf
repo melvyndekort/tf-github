@@ -1,11 +1,31 @@
 locals {
-  repo_yaml_files = fileset("${path.module}/repos", "*.yaml")
+  # _defaults.yaml holds the profile layer (see repos/_defaults.yaml), not a
+  # repo -- exclude it from the set of repo config files.
+  repo_yaml_files = [
+    for f in fileset("${path.module}/repos", "*.yaml") : f
+    if f != "_defaults.yaml"
+  ]
+
+  # name => profile defaults, e.g. { terraform-workload = { shared_workflows = true, ... } }
+  repo_profiles = yamldecode(file("${path.module}/repos/_defaults.yaml")).profiles
+
+  # Raw, undecoded-merge repo configs, keyed by file.
+  raw_repo_configs = {
+    for f in local.repo_yaml_files :
+    trimsuffix(f, ".yaml") => yamldecode(file("${path.module}/repos/${f}"))
+  }
 
   repositories_config = {
     global_collaborators = yamldecode(file("${path.module}/global.yaml")).global_collaborators
+    # A repo's own keys win over its profile's defaults (shallow merge: a key
+    # set in the repo file replaces the profile's value for that key wholesale,
+    # it does not append to a profile's list).
     repositories = {
-      for f in local.repo_yaml_files :
-      trimsuffix(f, ".yaml") => yamldecode(file("${path.module}/repos/${f}"))
+      for name, config in local.raw_repo_configs :
+      name => merge(
+        try(local.repo_profiles[config.profile], {}),
+        config,
+      )
     }
   }
 
@@ -91,7 +111,20 @@ module "repo" {
   deploy_keys            = try(each.value.deploy_keys, [])
 }
 
-# Custom repositories (like melvyndekort.github.io)
+# ---------------------------------------------------------------------------
+# Custom repositories -- deliberate escape hatch, not dead weight.
+#
+# `melvyndekort.github.io` is the only `type: custom` repo today. It exists
+# because it needs GitHub Pages, which the `repo` module does not support.
+# Hand-rolling it here (instead of extending `repo` with a Pages option used
+# by exactly one repo out of 33) was a conscious call: GitHub Pages needs a
+# `pages` block + a `default_branch` override that are both repo module
+# stand-ins already provided below, in parallel to the `repo` module's
+# equivalents. See README.md#custom-repos for the decision record. If a
+# second repo ever needs Pages, extend the `repo` module with an optional
+# `pages` variable at that point and migrate both onto it with `moved`
+# blocks; until then this ~100-line duplication is intentional, not drift.
+# ---------------------------------------------------------------------------
 resource "github_repository" "custom_repos" {
   for_each = local.custom_repos
 
@@ -225,7 +258,7 @@ resource "github_actions_secret" "oidc_role_arn" {
 # AWS_PLAN_ROLE_ARN secrets - only for repos that opted into a PR plan role
 resource "github_actions_secret" "oidc_plan_role_arn" {
   for_each = {
-    for name, arn in local.all_plan_role_arns :
+    for name, arn in local.all_aws_plan_role_arns :
     name => arn
     if contains(keys(local.repositories_config.repositories), name)
   }

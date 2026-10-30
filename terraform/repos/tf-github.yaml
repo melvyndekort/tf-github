@@ -3,6 +3,10 @@ description: "Centrally manage github configuration"
 shared_workflows: true
 required_status_checks:
   - "validate / validate"
+  # Phase 1 config-as-code hardening (2026-10-29): the two new local jobs in
+  # terraform-pr.yml, promoted from informational checks to a required gate.
+  - "schema-validate"
+  - "plan-leak-audit"
 # Restored 2026-10-29 (kanban t_7ccfb9f3 Phase 0.1): the
 # tf-github-redesign-plan-2026-10 migration (task t_a7c5d08b) has landed, so
 # the temporary direct-push window (required_pull_request: false, rollback

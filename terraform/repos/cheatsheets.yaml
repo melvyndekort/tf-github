@@ -1,10 +1,7 @@
 visibility: public
 description: "Documentation used in my custom Arch setup"
 aws_account: "075673041815"
-shared_workflows: true
-aws_plan_role: true
-required_status_checks:
-  - "validate / validate"
+profile: terraform-workload
 secrets:
   - name: CLOUDFLARE_ACCOUNT_ID
     value_ref: cloudflare_account_id

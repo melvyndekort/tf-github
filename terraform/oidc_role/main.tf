@@ -81,7 +81,7 @@ resource "aws_iam_role_policy_attachment" "admin" {
 # ---------------------------------------------------------------------------
 
 data "aws_iam_policy_document" "assume_plan" {
-  for_each = var.plan_repos
+  for_each = var.aws_plan_role_repos
 
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
@@ -108,13 +108,13 @@ data "aws_iam_policy_document" "assume_plan" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:job_workflow_ref"
-      values   = var.plan_job_workflow_refs
+      values   = var.aws_plan_role_job_workflow_refs
     }
   }
 }
 
 resource "aws_iam_role" "github_actions_plan" {
-  for_each = var.plan_repos
+  for_each = var.aws_plan_role_repos
 
   name               = "github-actions-${replace(each.key, ".", "-")}-plan"
   path               = "/external/"
@@ -123,7 +123,7 @@ resource "aws_iam_role" "github_actions_plan" {
 }
 
 resource "aws_iam_role_policy_attachment" "plan_readonly" {
-  for_each = var.plan_repos
+  for_each = var.aws_plan_role_repos
 
   role       = aws_iam_role.github_actions_plan[each.key].name
   policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
@@ -147,7 +147,7 @@ resource "aws_iam_role_policy_attachment" "plan_readonly" {
 # is why the trust policy pins `job_workflow_ref` to the shared plan workflow,
 # so PR-authored code never holds the credential.
 data "aws_iam_policy_document" "plan_kms_decrypt" {
-  for_each = var.plan_kms_key_arns
+  for_each = var.aws_plan_role_kms_key_arns
 
   statement {
     sid       = "DecryptPlanSecrets"
@@ -158,13 +158,13 @@ data "aws_iam_policy_document" "plan_kms_decrypt" {
     condition {
       test     = "StringEquals"
       variable = "kms:EncryptionContext:target"
-      values   = [var.plan_kms_targets[each.key]]
+      values   = [var.aws_plan_role_kms_targets[each.key]]
     }
   }
 }
 
 resource "aws_iam_role_policy" "plan_kms_decrypt" {
-  for_each = var.plan_kms_key_arns
+  for_each = var.aws_plan_role_kms_key_arns
 
   name   = "kms-decrypt"
   role   = aws_iam_role.github_actions_plan[each.key].name

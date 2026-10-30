@@ -1,7 +1,4 @@
 visibility: public
 description: "Terraform configuration for AWS CloudTrail setup"
 aws_account: "075673041815"
-shared_workflows: true
-aws_plan_role: true
-required_status_checks:
-  - "validate / validate"
+profile: terraform-workload

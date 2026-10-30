@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "tf-github repo config (repos/<name>.yaml)",
+  "description": "Authoritative schema for the config-as-code surface read by terraform/repositories.tf. Every legal top-level key must be listed in $defs.repoFields.properties; additionalProperties: false means a misspelled key fails validation instead of silently defaulting away via try(...).",
+  "$defs": {
+    "repoFields": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "type": "string",
+          "description": "Name of a profile defined in repos/_defaults.yaml. Its keys are merged in as defaults; any key also set explicitly in this file overrides the profile's value.",
+          "enum": ["terraform-workload"]
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "private"]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "description": "Set to \"custom\" to route through the hand-rolled custom_repos resources in repositories.tf instead of the repo module (used for melvyndekort.github.io, which needs GitHub Pages support the repo module does not provide; see README.md#custom-repos).",
+          "enum": ["custom"]
+        },
+        "aws_account": {
+          "type": "string",
+          "description": "12-digit AWS account id. Presence triggers creation of a github-actions-<repo> OIDC role in that account.",
+          "pattern": "^[0-9]{12}$"
+        },
+        "shared_workflows": {
+          "type": "boolean",
+          "description": "Allow-list melvyndekort/gha-workflows reusable workflows for this repo's GitHub Actions."
+        },
+        "aws_plan_role": {
+          "type": "boolean",
+          "description": "Create an additional read-only github-actions-<repo>-plan OIDC role, trust-gated to pull_request + the shared plan workflow's job_workflow_ref, and distribute AWS_PLAN_ROLE_ARN."
+        },
+        "aws_plan_kms_target": {
+          "type": "string",
+          "description": "Encryption-context `target` value this repo's plan role may kms:Decrypt on the shared generic KMS key. Must match the `target` used in the repo's own secrets.tf."
+        },
+        "required_status_checks": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Status check contexts required before main accepts a merge. Public repos only (repo module); ignored for private repos."
+        },
+        "require_pull_request": {
+          "type": "boolean",
+          "description": "Whether main requires a PR + review + status checks. Default true. Set false ONLY as a temporary, explicitly-tracked migration window (public repos only) -- see repo/variables.tf."
+        },
+        "required_review_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of approving reviews required on a pull request. Public repos only."
+        },
+        "production_environment": {
+          "type": "boolean",
+          "description": "Create a `production` GitHub Environment on this repo even without shared_workflows (e.g. a repo with its own bespoke apply workflow that still wants the OIDC subject pinned to :environment:production)."
+        },
+        "secrets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "value_ref"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "GitHub Actions secret name as it will appear in the repo."
+              },
+              "value_ref": {
+                "type": "string",
+                "description": "Key into the merged secret-value map: a local value name, or `tf_cloudflare.<output>` for any tf_cloudflare remote-state output."
+              }
+            }
+          }
+        },
+        "deploy_keys": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["title", "key", "read_only"],
+            "properties": {
+              "title": { "type": "string" },
+              "key": { "type": "string" },
+              "read_only": { "type": "boolean" }
+            }
+          }
+        },
+        "archived": {
+          "type": "boolean",
+          "description": "Whether the repository is archived (read-only). Only ever goes true -> once set, this module stops making writes against the repo."
+        },
+        "allow_forking": {
+          "type": "boolean"
+        },
+        "allowed_actions_config": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Extra allowed-actions glob patterns beyond the shared_workflows allow-list."
+        },
+        "has_issues": {
+          "type": "boolean"
+        },
+        "pages": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["branch"],
+          "description": "custom_repos only: GitHub Pages source branch.",
+          "properties": {
+            "branch": { "type": "string" }
+          }
+        },
+        "default_branch": {
+          "type": "string",
+          "description": "custom_repos only: default branch to set (e.g. gh-pages)."
+        }
+      }
+    }
+  },
+  "allOf": [{ "$ref": "#/$defs/repoFields" }],
+  "required": ["visibility", "description"]
+}
