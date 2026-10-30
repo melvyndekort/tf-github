@@ -2,3 +2,15 @@ visibility: public
 description: "Manage centralized AWS resources using Terraform"
 aws_account: "075673041815"
 production_environment: true
+# Read-only PR-plan counterpart of github-actions-tf-aws, trust-gated to
+# pull_request + the shared terraform-pr-plan.yml job_workflow_ref. tf-aws's
+# own terraform.yml is bespoke (predates gha-workflows, plans two working
+# directories: management/ and a matrix of accounts/<name>/), so it is NOT
+# on the terraform-workload profile / shared_workflows -- but it does use the
+# shared terraform-pr-plan.yml reusable workflow for its PR-time plan jobs,
+# which needs this role and the AWS_PLAN_ROLE_ARN secret it distributes.
+# tf-aws's own IAM grants a cross-account assume from this role onto each
+# subaccount's TerraformPlanRole (management/account-bootstrap.tf) so the
+# accounts/<name> plans run read-only end to end instead of the admin
+# OrganizationAccountAccessRole used at apply time.
+aws_plan_role: true
