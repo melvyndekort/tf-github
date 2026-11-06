@@ -1,3 +1,4 @@
 visibility: private
 description: "Decommissioned - replaced by Authentik"
 settings_enabled: false
+archived: true
