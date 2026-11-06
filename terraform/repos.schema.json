@@ -95,6 +95,10 @@
           "type": "boolean",
           "description": "Whether the repository is archived (read-only). Only ever goes true -> once set, this module stops making writes against the repo."
         },
+        "settings_enabled": {
+          "type": "boolean",
+          "description": "Whether repo-settings resources (vulnerability alerts, Actions permissions, workflow permissions, dependabot security updates) are managed. Defaults to !archived. Decommission a repo in two steps: set this false first (with archived still false) to destroy them while the repo is writable, confirm clean, then set archived: true -- see repo/variables.tf for why combining both in one apply races and gets permanently stuck."
+        },
         "allow_forking": {
           "type": "boolean"
         },
