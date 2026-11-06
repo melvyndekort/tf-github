@@ -108,6 +108,7 @@ module "repo" {
   allow_forking          = try(each.value.allow_forking, true)
   require_pull_request   = try(each.value.require_pull_request, true)
   archived               = try(each.value.archived, false)
+  settings_enabled       = try(each.value.settings_enabled, null)
   deploy_keys            = try(each.value.deploy_keys, [])
 }
 

@@ -18,13 +18,17 @@ resource "github_repository" "repo" {
   allow_update_branch = true
 }
 
+locals {
+  settings_enabled = var.settings_enabled == null ? !var.archived : var.settings_enabled
+}
+
 moved {
   from = github_repository_vulnerability_alerts.repo
   to   = github_repository_vulnerability_alerts.repo[0]
 }
 
 resource "github_repository_vulnerability_alerts" "repo" {
-  count = var.archived ? 0 : 1
+  count = local.settings_enabled ? 1 : 0
 
   repository = github_repository.repo.name
   enabled    = true
@@ -36,7 +40,7 @@ moved {
 }
 
 resource "github_actions_repository_permissions" "repo" {
-  count = var.archived ? 0 : 1
+  count = local.settings_enabled ? 1 : 0
 
   repository = github_repository.repo.name
 
@@ -57,7 +61,7 @@ moved {
 }
 
 resource "github_workflow_repository_permissions" "repo" {
-  count = var.archived ? 0 : 1
+  count = local.settings_enabled ? 1 : 0
 
   repository = github_repository.repo.name
 
@@ -79,7 +83,7 @@ moved {
 }
 
 resource "github_repository_dependabot_security_updates" "repo" {
-  count = var.archived ? 0 : 1
+  count = local.settings_enabled ? 1 : 0
 
   repository = github_repository.repo.id
   enabled    = true

@@ -84,6 +84,32 @@ variable "archived" {
   default     = false
 }
 
+variable "settings_enabled" {
+  description = <<-EOT
+    Whether the repo-settings resources (vulnerability alerts, Actions
+    permissions, workflow permissions, dependabot security updates) are
+    managed. Defaults to `!archived` so normal repos are unaffected.
+
+    Decommissioning a repo is a two-step dance because of this: flipping
+    `archived` straight to true in the same apply that destroys these
+    (which is what the default wiring does) races GitHub's archive call
+    against the destroy calls - once archived takes effect the repo goes
+    read-only and any destroy that loses the race 403s, permanently
+    stuck (the resource stays in state, every future apply retries and
+    fails the same way).
+
+    Decommission in two PRs instead:
+      1. Set settings_enabled = false explicitly (archived still false/
+         absent) - destroys these resources while the repo is still
+         writable. Confirm the apply is clean.
+      2. Set archived = true - settings_enabled already resolves to
+         false (same value), so nothing new needs destroying; this apply
+         only touches the repository resource itself.
+  EOT
+  type        = bool
+  default     = null
+}
+
 variable "deploy_keys" {
   description = "Read-only (or read-write) deploy keys to add to the repository."
   type = list(object({
