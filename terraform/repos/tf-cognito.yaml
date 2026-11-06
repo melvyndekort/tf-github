@@ -1,4 +1,3 @@
-visibility: public
-description: "Terraform configuration for AWS Cognito authentication"
-aws_account: "075673041815"
-profile: terraform-workload
+visibility: private
+description: "Decommissioned - replaced by Authentik"
+archived: true
