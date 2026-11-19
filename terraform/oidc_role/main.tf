@@ -19,7 +19,7 @@ data "aws_iam_openid_connect_provider" "github" {
 # ---------------------------------------------------------------------------
 
 module "trust" {
-  source = "git::https://github.com/melvyndekort/gha-workflows.git//modules/oidc-github-trust-policy?ref=feat/oidc-trust-policy-module"
+  source = "git::https://github.com/melvyndekort/gha-workflows.git//modules/oidc-github-trust-policy?ref=v2"
 
   for_each = var.repos
 
@@ -67,7 +67,7 @@ resource "aws_iam_role_policy_attachment" "admin" {
 # ---------------------------------------------------------------------------
 
 module "trust_plan" {
-  source = "git::https://github.com/melvyndekort/gha-workflows.git//modules/oidc-github-trust-policy?ref=feat/oidc-trust-policy-module"
+  source = "git::https://github.com/melvyndekort/gha-workflows.git//modules/oidc-github-trust-policy?ref=v2"
 
   for_each = var.aws_plan_role_repos
 
