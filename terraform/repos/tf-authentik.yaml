@@ -2,3 +2,4 @@ visibility: private
 description: "Manage Authentik (providers, applications, flows) via Terraform"
 aws_account: "075673041815"
 profile: terraform-workload
+aws_plan_kms_target: tf-authentik
