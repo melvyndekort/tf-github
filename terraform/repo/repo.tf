@@ -16,8 +16,8 @@ resource "github_repository" "repo" {
   # owned by an org (422 "Allow forks setting can only be changed on
   # org-owned private repositories") -- every repo here is personal-account
   # owned, so only manage this field for public repos.
-  allow_forking          = var.visibility == "public" ? var.allow_forking : null
-  archived               = var.archived
+  allow_forking = var.visibility == "public" ? var.allow_forking : null
+  archived      = var.archived
 
   allow_update_branch = true
 }
