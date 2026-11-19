@@ -12,7 +12,11 @@ resource "github_repository" "repo" {
   allow_auto_merge       = var.visibility == "public" ? true : false
   delete_branch_on_merge = true
   archive_on_destroy     = true
-  allow_forking          = var.allow_forking
+  # GitHub rejects an explicit allow_forking write on a private repo not
+  # owned by an org (422 "Allow forks setting can only be changed on
+  # org-owned private repositories") -- every repo here is personal-account
+  # owned, so only manage this field for public repos.
+  allow_forking          = var.visibility == "public" ? var.allow_forking : null
   archived               = var.archived
 
   allow_update_branch = true
