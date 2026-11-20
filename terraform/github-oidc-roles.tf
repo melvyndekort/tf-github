@@ -53,6 +53,15 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  alias  = "account_397379012163"
+  region = "eu-west-1"
+
+  assume_role {
+    role_arn = "arn:aws:iam::397379012163:role${var.subaccount_role_path}${var.subaccount_role_name}"
+  }
+}
+
 # Derive OIDC role lists from repositories.yaml
 locals {
   github_org      = "melvyndekort"
@@ -167,11 +176,32 @@ module "oidc_roles_520519513359" {
   }
 }
 
+# aws-idc-pim has no repos assigned yet (the workload repo doesn't exist
+# yet), so every by-account map lookup below falls back to {} via try() --
+# unlike the other three accounts, "397379012163" is not guaranteed to be a
+# key in local.oidc_repos_by_account until a repos/<name>.yaml sets
+# aws_account to it.
+module "oidc_roles_397379012163" {
+  source                          = "./oidc_role"
+  github_org                      = local.github_org
+  github_owner_id                 = local.github_owner_id
+  repos                           = try(local.oidc_repos_by_account["397379012163"], {})
+  aws_plan_role_repos             = try(local.aws_plan_role_repos_by_account["397379012163"], {})
+  aws_plan_role_job_workflow_refs = local.aws_plan_role_job_workflow_refs
+  aws_plan_role_kms_key_arns      = try(local.aws_plan_role_kms_key_arns_by_account["397379012163"], {})
+  aws_plan_role_kms_targets       = try(local.aws_plan_role_kms_targets_by_account["397379012163"], {})
+
+  providers = {
+    aws = aws.account_397379012163
+  }
+}
+
 locals {
   all_role_arns = merge(
     module.oidc_roles_075673041815.role_arns,
     module.oidc_roles_844347863910.role_arns,
     module.oidc_roles_520519513359.role_arns,
+    module.oidc_roles_397379012163.role_arns,
     {
       "tf-github" = data.aws_iam_role.tf_github_role.arn
     }
@@ -187,6 +217,7 @@ locals {
     module.oidc_roles_075673041815.aws_plan_role_arns,
     module.oidc_roles_844347863910.aws_plan_role_arns,
     module.oidc_roles_520519513359.aws_plan_role_arns,
+    module.oidc_roles_397379012163.aws_plan_role_arns,
     {
       "tf-github" = data.aws_iam_role.tf_github_plan_role.arn
     }
