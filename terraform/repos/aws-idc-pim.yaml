@@ -3,7 +3,3 @@ description: "Discord-driven just-in-time elevation for IAM Identity Center perm
 profile: terraform-workload
 aws_account: "397379012163"
 aws_plan_kms_target: aws-idc-pim
-# Phase 2: aws-idc-pim#1 (gh repo id R_kgDOV2fY5g) now exists, so
-# oidc_repos_by_account["397379012163"] can resolve a real repo_id --
-# see tf-github#67 for why aws_account couldn't be set in the same PR that
-# creates the repo (known-only-after-apply for_each error).
