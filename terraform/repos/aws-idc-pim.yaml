@@ -1,12 +1,9 @@
 visibility: public
 description: "Discord-driven just-in-time elevation for IAM Identity Center permission sets"
 profile: terraform-workload
-
-# aws_account + aws_plan_kms_target intentionally NOT set yet. Setting
-# aws_account on a repo that doesn't exist yet makes its name a new key in
-# github-oidc-roles.tf's oidc_repos_by_account map, whose VALUE (the GitHub
-# repo_id) is only known after this repo is created -- Terraform can't plan
-# a for_each over a map value that's "known only after apply" (confirmed
-# live: tf-github#67's first version hit exactly this with aws_account set).
-# Same two-phase pattern as tf-aws's own subaccount bootstrap: create first,
-# connect to AWS in a follow-up PR once the repo (and its repo_id) exists.
+aws_account: "397379012163"
+aws_plan_kms_target: aws-idc-pim
+# Phase 2: aws-idc-pim#1 (gh repo id R_kgDOV2fY5g) now exists, so
+# oidc_repos_by_account["397379012163"] can resolve a real repo_id --
+# see tf-github#67 for why aws_account couldn't be set in the same PR that
+# creates the repo (known-only-after-apply for_each error).
