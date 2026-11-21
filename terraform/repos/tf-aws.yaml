@@ -2,11 +2,6 @@ visibility: public
 description: "Manage centralized AWS resources using Terraform"
 aws_account: "075673041815"
 production_environment: true
-# Required status checks, set directly on GitHub's branch protection
-# (2026-11-20, same day as tf-aws#26's validate/plan/apply split) rather
-# than through this file at the time -- captured here now to close that
-# drift. Includes the aws-idc-pim matrix entries added right after
-# (tf-aws#31), since both validate/plan jobs for it exist in CI already.
 required_status_checks:
   - "management-validate / validate"
   - "management-plan / plan"

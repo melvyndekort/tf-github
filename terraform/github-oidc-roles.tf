@@ -176,11 +176,8 @@ module "oidc_roles_520519513359" {
   }
 }
 
-# aws-idc-pim has no repos assigned yet (the workload repo doesn't exist
-# yet), so every by-account map lookup below falls back to {} via try() --
-# unlike the other three accounts, "397379012163" is not guaranteed to be a
-# key in local.oidc_repos_by_account until a repos/<name>.yaml sets
-# aws_account to it.
+# aws-idc-pim has no repos assigned yet, so every by-account map lookup
+# below falls back to {} via try().
 module "oidc_roles_397379012163" {
   source                          = "./oidc_role"
   github_org                      = local.github_org
