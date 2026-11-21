@@ -1,0 +1,5 @@
+visibility: public
+description: "Discord-driven just-in-time elevation for IAM Identity Center permission sets"
+aws_account: "397379012163"
+profile: terraform-workload
+aws_plan_kms_target: aws-idc-pim
