@@ -62,6 +62,15 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  alias  = "account_805751386945"
+  region = "eu-west-1"
+
+  assume_role {
+    role_arn = "arn:aws:iam::805751386945:role${var.subaccount_role_path}${var.subaccount_role_name}"
+  }
+}
+
 # Derive OIDC role lists from repositories.yaml
 locals {
   github_org      = "melvyndekort"
@@ -193,12 +202,28 @@ module "oidc_roles_397379012163" {
   }
 }
 
+module "oidc_roles_805751386945" {
+  source                          = "./oidc_role"
+  github_org                      = local.github_org
+  github_owner_id                 = local.github_owner_id
+  repos                           = local.oidc_repos_by_account["805751386945"]
+  aws_plan_role_repos             = local.aws_plan_role_repos_by_account["805751386945"]
+  aws_plan_role_job_workflow_refs = local.aws_plan_role_job_workflow_refs
+  aws_plan_role_kms_key_arns      = local.aws_plan_role_kms_key_arns_by_account["805751386945"]
+  aws_plan_role_kms_targets       = local.aws_plan_role_kms_targets_by_account["805751386945"]
+
+  providers = {
+    aws = aws.account_805751386945
+  }
+}
+
 locals {
   all_role_arns = merge(
     module.oidc_roles_075673041815.role_arns,
     module.oidc_roles_844347863910.role_arns,
     module.oidc_roles_520519513359.role_arns,
     module.oidc_roles_397379012163.role_arns,
+    module.oidc_roles_805751386945.role_arns,
     {
       "tf-github" = data.aws_iam_role.tf_github_role.arn
     }
@@ -215,6 +240,7 @@ locals {
     module.oidc_roles_844347863910.aws_plan_role_arns,
     module.oidc_roles_520519513359.aws_plan_role_arns,
     module.oidc_roles_397379012163.aws_plan_role_arns,
+    module.oidc_roles_805751386945.aws_plan_role_arns,
     {
       "tf-github" = data.aws_iam_role.tf_github_plan_role.arn
     }

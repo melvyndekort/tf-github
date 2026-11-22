@@ -1,5 +1,5 @@
 visibility: public
 description: "A Minecraft server on AWS ECS"
-aws_account: "075673041815"
+aws_account: "805751386945"
 profile: terraform-workload
 aws_plan_kms_target: tf-minecraft
