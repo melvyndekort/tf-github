@@ -23,7 +23,7 @@ jobs:
   validate:
     permissions:
       contents: read
-    uses: melvyndekort/gha-workflows/.github/workflows/terraform-pr-validate.yml@v1
+    uses: melvyndekort/gha-workflows/.github/workflows/terraform-pr-validate.yml@v2
 
   # Schema-validate the repos/*.yaml config-as-code surface (Phase 1 item 1,
   # tf-github improvement plan 2026-10-29). Credential-free: pure YAML/JSON
@@ -114,7 +114,7 @@ jobs:
       id-token: write
       contents: read
       pull-requests: write
-    uses: melvyndekort/gha-workflows/.github/workflows/terraform-pr-plan.yml@v1
+    uses: melvyndekort/gha-workflows/.github/workflows/terraform-pr-plan.yml@v2
     # This repo manages IAM roles in every account, so its plan refreshes
     # cross-account. The Terraform default is the admin role, which a read-only
     # plan role is deliberately not allowed to assume, so point the providers at
